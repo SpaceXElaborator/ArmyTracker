@@ -1,2 +1,7 @@
 /build/
 /target/
+/.settings/
+.project
+.classpath
+/src/main/webapp/META-INF/
+/src/main/webapp/WEB-INF/
