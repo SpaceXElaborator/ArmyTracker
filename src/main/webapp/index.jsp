@@ -12,7 +12,7 @@
 <title>Soldier Information Sheet - Login</title>
 </head>
 <body>
-
+	<!-- https://www.geeksforgeeks.org/sql-alter-add-drop-modify/ -->
 	<div class="container-fluid">
 		<div id="login_form" class="row main-content bg-success text-center">
 			<div class="col-md-4 text-center icorp-info">
