@@ -1,6 +1,11 @@
 package com.SRahman.SoldierTracker;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.sql.SQLException;
+
+import com.SRahman.SoldierTracker.Util.Database;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,13 +21,21 @@ public class HandleLogin extends HttpServlet {
 		// No getting required, so just send to post
 		doPost(request, response);
 	}
-
-
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String username = request.getParameter("login");
 		String password = request.getParameter("password");
 		
 		response.getWriter().write(username + " | " + password);
+		
+		// Issue with Sqlite db not reading from resource 
+		System.out.println(HandleLogin.class.getClassLoader().getResource("SqliteLTDatabase.db"));
+		try {
+			Database.addUser(username, password);
+			System.out.println(Database.checkLogin(username, password));
+		} catch (ClassNotFoundException | SQLException | InvalidKeySpecException | NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
 		
 		// TODO: attempt connection to database
 			// Check for username/password
