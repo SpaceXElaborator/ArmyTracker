@@ -1,8 +1,6 @@
 package com.SRahman.SoldierTracker;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
 
 import com.SRahman.SoldierTracker.Util.Database;
@@ -29,11 +27,10 @@ public class HandleLogin extends HttpServlet {
 		response.getWriter().write(username + " | " + password);
 		
 		// Issue with Sqlite db not reading from resource 
-		System.out.println(HandleLogin.class.getClassLoader().getResource("SqliteLTDatabase.db"));
+		response.getWriter().write(HandleLogin.class.getClassLoader().getResource("SqliteLTDatabase.db").toString());
 		try {
-			Database.addUser(username, password);
 			System.out.println(Database.checkLogin(username, password));
-		} catch (ClassNotFoundException | SQLException | InvalidKeySpecException | NoSuchAlgorithmException e) {
+		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
 		
