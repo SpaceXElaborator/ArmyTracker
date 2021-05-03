@@ -31,7 +31,7 @@ public class HandleLogin extends HttpServlet {
 				sess.setAttribute("user", username);
 				sess.setMaxInactiveInterval(30*60);
 				if(sess.getAttribute("user") != null || sess.getAttribute("user") != "") {
-					// TODO: Send redirect to admin portal
+					response.sendRedirect("tracker.jsp");
 					response.getWriter().write("Will Send to Tracker webpage");
 					return;
 				} else {
