@@ -47,18 +47,6 @@ public class HandleLogin extends HttpServlet {
 			response.sendRedirect("index.jsp");
 			return;
 		}
-		
-		// TODO: attempt connection to database 													----
-			// Check for username/password 															----
-				// set attributes of loggedin and username (Best approach for security?)			---?
-				// Check if attributes were set														----
-					// create session and redirect to tracker.jsp (Check for session hijacking?)	----
-					// LOOKUP: https://stackoverflow.com/questions/16912492/session-hijacking-prevention-in-java-struts-2-0-error-encountered
-					// LOOKUP: https://www.selikoff.net/2017/10/04/javaone-hacker-guide-session-hijacking/
-				// not set																			----
-					// Send to index.jsp															----
-			// send to index.jsp if login fails														----
-		// send to index.jsp if can't connect to database											----
 	}
 
 }
