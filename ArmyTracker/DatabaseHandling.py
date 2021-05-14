@@ -1,6 +1,5 @@
 import sqlite3
 import os
-from contextlib import closing
 
 class Database:
     def __init__(self, app):
@@ -21,8 +20,9 @@ class Database:
             db = self.connect()
             db.cursor().executescript(f.read())
         db.commit()
+        
+    # Create connection to SQLite Database file from configuration
     def connect(self):
-        print('Connecting to Database...')
         return sqlite3.connect(self.webapp.config['DATABASE'])
     
     # sqlargument will be the sql script to be ran
