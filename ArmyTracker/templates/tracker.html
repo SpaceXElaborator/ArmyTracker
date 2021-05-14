@@ -76,6 +76,63 @@
 				{% endfor %}
 				</div>
 			</section>
+			
+			<!-- Entire div will be in the background until button has been pressed. 
+				From there, the modal will make sure all values have been entered before moving on to
+				submit the form to /AddUser where Python will take control again -->
+			<div class="modal fade" id="AddUserModal" tabindex="-1" aria-labelledby="AddUserModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="AddUserModalLabel">Add User</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<form action="AddUser" method="POST">
+								<div class="mb-3">
+									<label for="First">First Name</label>
+									<input type="text" name="First" id="First" class="form-control" required>
+									<div class="invalid-feedback">
+										Please Provide First Name
+									</div>
+								</div>
+								<div class="mb-3">
+									<label for="Last">Last Name</label>
+									<input type="text" name="Last" id="Last" class="form-control" required>
+									<div class="invalid-feedback">
+										Please Provide Last Name
+									</div>
+								</div>
+								<div class="mb-3">
+									<label for="Rank">Rank</label>
+									<input type="text" name="Rank" id="Rank" class="form-control" required>
+									<div class="invalid-feedback">
+										Please Provide Rank
+									</div>
+								</div>
+								<div class="mb-3">
+									<label for="Squad">Squad</label>
+									<input type="number" min="0" name="Squad" id="Squad" class="form-control" required>
+									<div class="invalid-feedback">
+										Please Provide Squad Number
+									</div>
+								</div>
+								<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+								<button type="submit" class="btn btn-primary">Add User</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<section class="mb-4">
+				<div class="card">
+					<div class="card-body text-centered">
+						<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddUserModal">Add User</button>
+					</div>
+				</div>
+			</section>
+			
 		</div>
 	</main>
 	
