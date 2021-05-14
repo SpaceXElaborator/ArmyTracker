@@ -1,3 +1,7 @@
+import json
+
 class Config(object):
-    DATABASE = 'Tracker.db'
-    SECRET_KEY = 'urasE3AhMEbFNZfXxRsW'
+    with open('config.conf','r') as f:
+        data = json.load(f)
+    DATABASE = data['Database']
+    SECRET_KEY = data['Secret_Key']
