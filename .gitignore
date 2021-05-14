@@ -6,3 +6,4 @@
 /src/main/webapp/META-INF/
 /src/main/webapp/WEB-INF/
 ArmyTracker/__pycache__/
+ArmyTracker/Tracker.db
