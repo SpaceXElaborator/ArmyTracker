@@ -1,9 +1,4 @@
-/build/
-/target/
-/.settings/
 .project
-.classpath
-/src/main/webapp/META-INF/
-/src/main/webapp/WEB-INF/
+.pydevproject
 ArmyTracker/__pycache__/
 ArmyTracker/Tracker.db
