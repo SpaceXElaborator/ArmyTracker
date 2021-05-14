@@ -22,8 +22,7 @@ db = Database(app)
 
 @app.route('/')
 def index():
-    title = 'Sawah'
-    return render_template('index.html', title=title)
+    return render_template('index.html')
 
 # Take the incoming post request and start working on handling the log-in portion
 @app.route('/HandleLogin', methods = ['POST'])
@@ -34,5 +33,4 @@ def login():
         return test
 
 if __name__ == '__main__':
-    db.connect()
     app.run()
