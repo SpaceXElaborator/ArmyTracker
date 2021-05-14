@@ -33,4 +33,9 @@ def login():
         return test
 
 if __name__ == '__main__':
+    # -----DEBUG-----
+    # Print None to showcase 'Sean' is not in the database
+    print(db.query('SELECT * FROM users WHERE first = ?', ['Sean'], one=True))
+    # -----DEBUG-----
+    
     app.run()

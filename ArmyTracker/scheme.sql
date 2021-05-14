@@ -5,3 +5,9 @@ CREATE TABLE IF NOT EXISTS users (
 	rank string not null,
 	squad int not null
 );
+
+CREATE TABLE IF NOT EXISTS login (
+	id integer primary key autoincrement,
+	username string not null,
+	password string not null
+);
