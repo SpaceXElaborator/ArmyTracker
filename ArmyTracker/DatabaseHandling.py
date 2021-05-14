@@ -47,7 +47,7 @@ class Database:
         return  (True if userFound else False)
     
     def checkTrackedUser(self, first, last):
-        userFound = self.query('SELECT * FROM users WHERE first = ? AND last = ?', [first.casefold(), last.casefold()], one = True)
+        userFound = self.query('SELECT * FROM users WHERE first = ? AND last = ?', [first.lower().capitalize(), last.lower().capitalize()], one = True)
         return (True if userFound else False)
     
     # Create a given user for the login portion using pbkdf2_sha256 recommended database password storing
