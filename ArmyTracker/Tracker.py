@@ -54,7 +54,8 @@ def testTracker():
         return redirect('/')
     
     # If they login, set their name in the top left corner of the page
-    return render_template('tracker.html', loggedInUser=session['username'])
+    return render_template('tracker.html', loggedInUser=session['username'], users=db.query('SELECT * FROM users'))
 
 if __name__ == '__main__':
+    print(db.checkTrackedUser('sean', 'rahman'))
     app.run()
