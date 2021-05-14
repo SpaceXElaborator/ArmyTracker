@@ -31,6 +31,10 @@ def login():
         user = request.form['login']
         test = '<html><body>' + user + '</body></html>'
         return test
+        
+@app.route('/tracker')
+def testTracker():
+    return render_template('tracker.html', loggedInUser='Sean')
 
 if __name__ == '__main__':
     # -----DEBUG-----
