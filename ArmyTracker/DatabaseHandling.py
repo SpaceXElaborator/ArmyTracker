@@ -44,7 +44,11 @@ class Database:
     # Check for the username in the login database to make sure two usernames do not exists that are the same
     def checkUser(self, username):
         userFound = self.query('SELECT * FROM login WHERE username = ?', [username.casefold()], one = True)
-        return(True if userFound else False)
+        return  (True if userFound else False)
+    
+    def checkTrackedUser(self, first, last):
+        userFound = self.query('SELECT * FROM users WHERE first = ? AND last = ?', [first.casefold(), last.casefold()], one = True)
+        return (True if userFound else False)
     
     # Create a given user for the login portion using pbkdf2_sha256 recommended database password storing
     def createUser(self, username, password):
@@ -61,4 +65,12 @@ class Database:
         if self.checkUser(username):
             user = self.query('SELECT * FROM login WHERE username = ?', [username.casefold()], one = True)
             return pbkdf2_sha256.verify(password, user[2])
+        return False
+    def addTrackerUser(self, first, last, rank, squad):
+        if not self.checkTrackedUser(first, last):
+            db = self.connect()
+            db.execute('INSERT INTO users VALUES(?, ?, ?, ?, ?)', [None, first.capitalize(), last.capitalize(), rank.upper(), int(squad)])
+            db.commit()
+            db.close()
+            return True
         return False
