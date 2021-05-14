@@ -15,6 +15,10 @@ class Database:
     def connect(self):
         print('Connecting to Database...')
         return sqlite3.connect('Tracker.db')
+    
+    # sqlargument will be the sql script to be ran
+    # args will change inplace of '?' when getting specific columns
+    # one will tell the code whether it needs to find only one thing (first find) or all
     def query(self, sqlargument, args=(), one=False):
         db = self.connect()
         cursor = db.execute(sqlargument, args)
