@@ -58,6 +58,27 @@
 		</nav>
 	</header>
 	
+	<main style="margin-top: 58px">
+		<div class="container pt-4">
+			<section>
+				<div class="row">
+				{% for x in users %}
+					<div class="col-xl-3 col-sm-6 col-12 mb-4">
+						<div class="card">
+							<div class="card-header py-3">
+								<strong>{{ '{0} {1}'.format(x[3],x[2]) }}</strong>
+							</div>
+							<div class="card-body">
+								test
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+				</div>
+			</section>
+		</div>
+	</main>
+	
 	<script type="text/javascript" src="{{ url_for('static',filename='javascript/bootstrap.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static',filename='javascript/mdb.min.js') }}"></script>
 </body>
