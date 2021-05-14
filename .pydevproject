@@ -5,4 +5,8 @@
     </pydev_pathproperty>
     <pydev_property name="org.python.pydev.PYTHON_PROJECT_VERSION">python interpreter</pydev_property>
     <pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">Default</pydev_property>
+    <pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH">
+        <path>C:\Users\Sean Rahman\AppData\Local\Programs\Python\Python39-32</path>
+        <path>C:\Users\Sean Rahman\AppData\Local\Programs\Python\Python39-32\Lib\site-packages</path>
+    </pydev_pathproperty>
 </pydev_project>
