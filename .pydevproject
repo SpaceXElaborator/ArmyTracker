@@ -8,5 +8,6 @@
     <pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH">
         <path>C:\Users\Sean Rahman\AppData\Local\Programs\Python\Python39-32</path>
         <path>C:\Users\Sean Rahman\AppData\Local\Programs\Python\Python39-32\Lib\site-packages</path>
+        <path>C:\Users\Sean Rahman\AppData\Local\Programs\Python\Python39-32\Lib</path>
     </pydev_pathproperty>
 </pydev_project>
