@@ -23,7 +23,7 @@
 			$(window).on('load', function() {
 				$('#UserFailed').modal('show');
 				{% py %}
-					session.pop('AddUserFailed')
+					session.pop('FailedInteraction')
 				{% endpy %}
 			});
 		</script>
