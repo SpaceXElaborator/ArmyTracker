@@ -18,7 +18,7 @@
 </head>
 
 <body>
-	{% if 'AddUserFailed' in session %}
+	{% if 'FailedInteraction' in session %}
 		<script type="text/javascript">
 			$(window).on('load', function() {
 				$('#UserFailed').modal('show');
@@ -31,7 +31,7 @@
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="UserFailedLabel">User Creation Failed</h5>
+						<h5 class="modal-title" id="UserFailedLabel">{{ session['FailedInteraction'] }}</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">

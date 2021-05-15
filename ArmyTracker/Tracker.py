@@ -71,7 +71,7 @@ def addUser():
     squad = request.form['Squad']
     
     if not db.addTrackerUser(first, last, rank, squad):
-        session['AddUserFailed'] = 'True'
+        session['FailedInteraction'] = 'User Creation Failed'
         session['Warning'] = 'User Already Exists!'
     
     # Send them back to the tracker homepage once they have added the user to update the page
