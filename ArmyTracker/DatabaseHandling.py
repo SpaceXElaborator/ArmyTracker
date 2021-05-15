@@ -76,3 +76,12 @@ class Database:
             db.close()
             return True
         return False
+        
+    def remTrackerUser(self, first, last):
+        if self.checkTrackedUser(first, last):
+            db = self.connect()
+            db.execute('DELETE FROM users WHERE first = ? AND last = ?', [first.lower().capitalize(), last.lower().capitalize()])
+            db.commit()
+            db.close()
+            return True
+        return False

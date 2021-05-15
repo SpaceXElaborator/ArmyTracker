@@ -65,16 +65,38 @@ def addUser():
     if 'username' not in session:
         return redirect('/')
     
+    # Get the required fields to add a user from the <form> tag in html document
     first = request.form['First']
     last = request.form['Last']
     rank = request.form['Rank']
     squad = request.form['Squad']
     
+    # Connect to the Database and have it handle the interaction
     if not db.addTrackerUser(first, last, rank, squad):
         session['FailedInteraction'] = 'User Creation Failed'
         session['Warning'] = 'User Already Exists!'
     
     # Send them back to the tracker homepage once they have added the user to update the page
+    return redirect('/tracker')
+
+@app.route('/RemUser', methods = ['POST'])
+def remUser():
+    
+    #If they don't have a proper session, redirect them back to the homepage
+    if 'username' not in session:
+        return redirect('/')
+    
+    # Get the first and last name from the <option> tag from the html form
+    name = request.form['UserName'].split(' ')
+    first = name[0]
+    last = name[1]
+    
+    # Connect to the Database and have it handle the interaction
+    if not db.remTrackerUser(first, last):
+        session['FailedInteraction'] = 'User Deletion Failed'
+        session['Warning'] = 'User Does Not Exists!'
+    
+    # Send them back to the tracker homepage once they have added the user to update the page    
     return redirect('/tracker')
 
 if __name__ == '__main__':
