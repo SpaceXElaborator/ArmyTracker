@@ -27,12 +27,12 @@
 				{% endpy %}
 			});
 		</script>
-		<div class="modal fade" id="UserFailed" tabindex="-1" aria-labelledby="UserFailedLabel" aria-hidden="true">
+		<div class="modal fade" id="InteractionFailed" tabindex="-1" aria-labelledby="InteractionFailedLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="UserFailedLabel">{{ session['FailedInteraction'] }}</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						<h5 class="modal-title" id="InteractionFailedLabel">{{ session['FailedInteraction'] }}</h5>
+						<button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
 						<div class="alert alert-warning" role="alert">
@@ -114,7 +114,7 @@
 					<div class="modal-content">
 						<div class="modal-header">
 							<h5 class="modal-title" id="AddUserModalLabel">Add User</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							<button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
 						<div class="modal-body">
 							<form action="AddUser" method="POST">
@@ -142,9 +142,35 @@
 				</div>
 			</div>
 			
+			<div class="modal fade" id="RemUserModal" tabindex="-1" aria-labelledby="RemUserModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="RemUserModalLabel">Remove User</h5>
+							<button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<form action="RemUser" method="POST">
+								<div class="mb-3">
+									<label for="UserName">Soldier</label>
+									<select class="form-select" aria-label="UserName" name="UserName" id="UserName">
+										<option selected>Select Soldier</option>
+										{% for x in users %}
+											<option value="{{ '{0} {1}'.format(x[1], x[2]) }}">{{ '{0} {1}'.format(x[1], x[2]) }}</option>
+										{% endfor %}
+									</select>
+								</div>
+								<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			
 			<section class="mb-4">
 				<div class="card">
-					<div class="card-body text-centered">
+					<div class="card-body text-center">
+						<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#RemUserModal">Remove User</button>
 						<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddUserModal">Add User</button>
 					</div>
 				</div>
