@@ -50,7 +50,7 @@
 							<i class="fas fa-user"></i>
 						</a>
 						<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userProfile">
-							<li><a class="dropdown-item" href="#">Change Password</a></li>
+							<li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#ChangePassModal">Change Password</button></li>
 						</ul>
 					</li>
 					<li class="nav-item"><a class="nav-link me-3 me-lg-0" href="HandleLogout">Logout</a></li>
@@ -148,6 +148,35 @@
 								</div>
 								<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
 								<button type="submit" class="btn btn-primary">Delete User</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal fade" id="ChangePassModal" tabindex="-1" aria-labelledby="ChangePassModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="ChangePassModalLabel">Change Password</h5>
+							<button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<form action="ChangePassword" method="POST">
+								<div class="mb-3">
+									<label for="Current">Current Password</label>
+									<input type="password" name="Current" id="Current" class="form-control" required>
+								</div>
+								<div class="mb-3">
+									<label for="NewPass">New Password</label>
+									<input type="password" name="NewPass" id="NewPass" class="form-control" required>
+								</div>
+								<div class="mb-3">
+									<label for="NewPassCheck">Retype Password</label>
+									<input type="password" name="NewPassCheck" id="NewPassCheck" class="form-control" required>
+								</div>
+								<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+								<button type="submit" class="btn btn-primary">Change Password</button>
 							</form>
 						</div>
 					</div>

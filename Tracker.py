@@ -109,5 +109,28 @@ def logout():
     session.pop('username')
     return redirect('/')
 
+@app.route('/ChangePassword', methods = ['POST'])
+def changePass():
+    #If they don't have a proper session, redirect them back to the homepage
+    if 'username' not in session:
+        return redirect('/')
+    
+    curr = request.form['Current']
+    NewPass = request.form['NewPass']
+    NewPassCheck = request.form['NewPassCheck']
+    
+    err = None
+    
+    if NewPass == NewPassCheck:
+        if db.loginUser(session['username'], curr):
+            db.changePass(session['username'], NewPass)
+            # TODO: send toast saying password got updated
+        else:
+            err = 'Incorrect Password!'
+    else:
+        err = 'Passwords Do Not Match!'
+        
+    return redirect(url_for('trackerDash', error=err))
+
 if __name__ == '__main__':
     app.run()

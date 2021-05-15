@@ -76,7 +76,13 @@ class Database:
             db.close()
             return True
         return False
-        
+    
+    def changePass(self, username, newpass):
+        hashPass = pbkdf2_sha256.hash(newpass)
+        db = self.connect()
+        db.execute('UPDATE login SET password = ? WHERE username = ?', [hashPass, username])
+        db.commit()
+        db.close()
     def remTrackerUser(self, first, last):
         if self.checkTrackedUser(first, last):
             db = self.connect()
