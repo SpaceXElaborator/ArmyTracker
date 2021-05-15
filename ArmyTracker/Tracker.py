@@ -47,7 +47,7 @@ def login():
         return redirect('/')
         
 @app.route('/tracker')
-def testTracker():
+def trackerDash():
 
     # If they don't have a proper session, redirect them back to the homepage
     if 'username' not in session:
@@ -56,6 +56,24 @@ def testTracker():
     # If they login, set their name in the top left corner of the page
     return render_template('tracker.html', loggedInUser=session['username'], users=db.query('SELECT * FROM users'))
 
+@app.route('/AddUser', methods = ['POST'])
+def addUser():
+    
+    #If they don't have a proper session, redirect them back to the homepage
+    if 'username' not in session:
+        return redirect('/')
+    
+    first = request.form['First']
+    last = request.form['Last']
+    rank = request.form['Rank']
+    squad = request.form['Squad']
+    
+    if not db.addTrackerUser(first, last, rank, squad):
+        session['AddUserFailed'] = 'True'
+        session['Warning'] = 'User Already Exists!'
+    
+    # Send them back to the tracker homepage once they have added the user to update the page
+    return redirect('/tracker')
+
 if __name__ == '__main__':
-    print(db.checkTrackedUser('sean', 'rahman'))
     app.run()
