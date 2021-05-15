@@ -84,6 +84,8 @@
 								<strong>{{ '{0} {1}'.format(x[3],x[2]) }}</strong>
 							</div>
 							<div class="card-body">
+								{{ '{0} {1}'.format(x[1], x[2]) }}
+								<br />
 								{{ 'Squad: {0}'.format(x[4]) }}
 							</div>
 						</div>
@@ -114,7 +116,38 @@
 								</div>
 								<div class="mb-3">
 									<label for="Rank">Rank</label>
-									<input type="text" name="Rank" id="Rank" class="form-control" required>
+									<select class="form-select" aria-label="Rank" name="Rank" id="Rank" required>
+										<option value="PVT" selected>PVT</option>
+										<option value="PV2">PV2</option>
+										<option value="PFC">PFC</option>
+										<option value="SPC">SPC</option>
+										<option value="CPL">CPL</option>
+										<option value="SGT">SGT</option>
+										<option value="SSG">SSG</option>
+										<option value="SFC">SFC</option>
+										<option value="MSG">MSG</option>
+										<option value="1SG">1SG</option>
+										<option value="SGM">SGM</option>
+										<option value="CSM">CSM</option>
+										<option value="SMA">SMA</option>
+										
+										<option value="WO1">WO1</option>
+										<option value="CW2">CW2</option>
+										<option value="CW3">CW3</option>
+										<option value="CW4">CW4</option>
+										<option value="CW5">CW5</option>
+										
+										<option value="2LT">2LT</option>
+										<option value="1LT">1LT</option>
+										<option value="CPT">CPT</option>
+										<option value="MAJ">MAJ</option>
+										<option value="LTC">LTC</option>
+										<option value="COL">COL</option>
+										<option value="BG">BG</option>
+										<option value="MG">MG</option>
+										<option value="LTG">LTG</option>
+										<option value="GEM">GEM</option>
+									</select>
 								</div>
 								<div class="mb-3">
 									<label for="Squad">Squad</label>
