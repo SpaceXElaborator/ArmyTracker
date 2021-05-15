@@ -18,35 +18,7 @@
 </head>
 
 <body>
-	{% if 'FailedInteraction' in session %}
-		<script type="text/javascript">
-			$(window).on('load', function() {
-				$('#UserFailed').modal('show');
-				{% py %}
-					session.pop('FailedInteraction')
-				{% endpy %}
-			});
-		</script>
-		<div class="modal fade" id="InteractionFailed" tabindex="-1" aria-labelledby="InteractionFailedLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="InteractionFailedLabel">{{ session['FailedInteraction'] }}</h5>
-						<button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					</div>
-					<div class="modal-body">
-						<div class="alert alert-warning" role="alert">
-							{{ session['Warning'] }}
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		{% py %}
-			session.pop('Warning')
-		{% endpy %}
-	{% endif %}
-
+	
 	<header>
 		<!-- Side menu bar -->
 		<nav id="sidebarMenu"
@@ -81,7 +53,7 @@
 							<li><a class="dropdown-item" href="#">Change Password</a></li>
 						</ul>
 					</li>
-					<li class="nav-item"><a class="nav-link me-3 me-lg-0" href="HandelLogout">Logout</a></li>
+					<li class="nav-item"><a class="nav-link me-3 me-lg-0" href="HandleLogout">Logout</a></li>
 				</ul>
 			</div>
 		</nav>
@@ -89,6 +61,20 @@
 	
 	<main style="margin-top: 58px">
 		<div class="container pt-4">
+			{% if error %}
+				<div class="position-fixed bottom-0 end-0 p-3" style="z-index:5">
+					<div id="toast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+						<div class="toast-header bg-danger">
+							<strong class="me-auto text-black">Something Went Wrong...</strong>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							{{ error }}
+						</div>
+					</div>
+				</div>
+			{% endif %}
+			
 			<section>
 				<div class="row">
 				{% for x in users %}
@@ -98,7 +84,7 @@
 								<strong>{{ '{0} {1}'.format(x[3],x[2]) }}</strong>
 							</div>
 							<div class="card-body">
-								test
+								{{ 'Squad: {0}'.format(x[4]) }}
 							</div>
 						</div>
 					</div>
@@ -180,8 +166,18 @@
 		</div>
 	</main>
 	
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 	<script type="text/javascript" src="{{ url_for('static',filename='javascript/bootstrap.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static',filename='javascript/mdb.min.js') }}"></script>
+	<script type="text/javascript">
+		$(window).on('load', function() {
+			var toasts = [].slice.call(document.querySelectorAll('.toast'))
+			var toastList = toasts.map(function(toast) {
+				return new bootstrap.Toast(toast);
+			});
+			toastList.forEach(toast => toast.show());
+		});
+	</script>
 </body>
 
 </html>

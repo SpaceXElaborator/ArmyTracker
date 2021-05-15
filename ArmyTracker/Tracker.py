@@ -7,11 +7,10 @@ Created on May 13, 2021
 # passlib sqlite3 jinja2 flask
 
 # Python Imports
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, url_for
 
 # Local Imports
 from DatabaseHandling import Database
-from PythonExtension import PythonExtension
 
 app = Flask(__name__)
 
@@ -20,7 +19,6 @@ app.config.from_object('ArmyTrackerConfiguration.Config')
 
 # Random string used to create HTTP sessions using Flask
 app.secret_key = app.config['SECRET_KEY']
-app.jinja_env.add_extension(PythonExtension)
 
 # Create our Database class object that will be used for connection handling and querying
 db = Database(app)
@@ -56,7 +54,7 @@ def trackerDash():
         return redirect('/')
     
     # If they login, set their name in the top left corner of the page
-    return render_template('tracker.html', loggedInUser=session['username'], users=db.query('SELECT * FROM users'))
+    return render_template('tracker.html', loggedInUser=session['username'], users=db.query('SELECT * FROM users'), error=request.args.get('error'))
 
 @app.route('/AddUser', methods = ['POST'])
 def addUser():
@@ -71,13 +69,14 @@ def addUser():
     rank = request.form['Rank']
     squad = request.form['Squad']
     
+    err = None
+    
     # Connect to the Database and have it handle the interaction
     if not db.addTrackerUser(first, last, rank, squad):
-        session['FailedInteraction'] = 'User Creation Failed'
-        session['Warning'] = 'User Already Exists!'
+        err = 'User Already Exists!'
     
     # Send them back to the tracker homepage once they have added the user to update the page
-    return redirect('/tracker')
+    return redirect(url_for('trackerDash', error=err))
 
 @app.route('/RemUser', methods = ['POST'])
 def remUser():
@@ -91,13 +90,24 @@ def remUser():
     first = name[0]
     last = name[1]
     
+    err = None
+    
     # Connect to the Database and have it handle the interaction
     if not db.remTrackerUser(first, last):
-        session['FailedInteraction'] = 'User Deletion Failed'
-        session['Warning'] = 'User Does Not Exists!'
+        err = 'User Does Not Exists!'
     
     # Send them back to the tracker homepage once they have added the user to update the page    
-    return redirect('/tracker')
+    return redirect(url_for('trackerDash', error=err))
+
+@app.route('/HandleLogout')
+def logout():
+
+    #If they don't have a proper session, redirect them back to the homepage
+    if 'username' not in session:
+        return redirect('/')
+        
+    session.pop('username')
+    return redirect('/')
 
 if __name__ == '__main__':
     app.run()
