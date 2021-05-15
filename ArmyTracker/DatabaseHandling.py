@@ -61,11 +61,13 @@ class Database:
             db.close()
             return True
         return False
+        
     def loginUser(self, username, password):
         if self.checkUser(username):
             user = self.query('SELECT * FROM login WHERE username = ?', [username.casefold()], one = True)
             return pbkdf2_sha256.verify(password, user[2])
         return False
+    
     def addTrackerUser(self, first, last, rank, squad):
         if not self.checkTrackedUser(first, last):
             db = self.connect()
