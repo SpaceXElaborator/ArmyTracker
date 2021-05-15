@@ -6,6 +6,12 @@ A Simple Army Tracker that allows for a user to log-in and view soldiers rank, n
 3. Extract the contents of the ZIP into any directory
 4. From that directory run ```docker build -t army-tracker .```
 5. Finished!
+## First Run
+On first run, login using the credentials
+```
+username: 'admin'
+password: 'password1'
+```
 ## Running
 To run the application, run the command
 ```docker run -i -t -p 5000:5000 army-tracker```. There is a current issue where the IP address may change where you need to connect to from the terminal,
