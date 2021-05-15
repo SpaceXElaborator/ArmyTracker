@@ -11,6 +11,7 @@ from flask import Flask, render_template, request, redirect, session
 
 # Local Imports
 from DatabaseHandling import Database
+from PythonExtension import PythonExtension
 
 app = Flask(__name__)
 
@@ -19,6 +20,7 @@ app.config.from_object('ArmyTrackerConfiguration.Config')
 
 # Random string used to create HTTP sessions using Flask
 app.secret_key = app.config['SECRET_KEY']
+app.jinja_env.add_extension(PythonExtension)
 
 # Create our Database class object that will be used for connection handling and querying
 db = Database(app)
