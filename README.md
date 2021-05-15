@@ -1,4 +1,4 @@
-# LTProject
+# ArmyTracker
 A Simple Army Tracker that allows for a user to log-in and view soldiers rank, name, and squad position. Validation is in place to be able to remove and add soldiers as well as change the password for the default admin created on first launch.
 ## Setup
 1. Download Docker from the [Docker Website](https://www.docker.com/products/docker-desktop)
