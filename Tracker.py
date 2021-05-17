@@ -8,9 +8,11 @@ Created on May 13, 2021
 
 # Python Imports
 from flask import Flask, render_template, request, redirect, session, url_for
+import calendar
 
 # Local Imports
 from DatabaseHandling import Database
+from ArmyCalendar import ArmyCalendar
 
 app = Flask(__name__)
 
@@ -22,6 +24,7 @@ app.secret_key = app.config['SECRET_KEY']
 
 # Create our Database class object that will be used for connection handling and querying
 db = Database(app)
+cal = ArmyCalendar()
 
 @app.route('/')
 def index():
@@ -55,6 +58,15 @@ def trackerDash():
     
     # If they login, set their name in the top left corner of the page
     return render_template('tracker.html', loggedInUser=session['username'], users=db.query('SELECT * FROM users'), error=request.args.get('error'))
+
+@app.route('/calendar')
+def eventCalendar():
+    
+    # If they don't have a proper session, redirect them back to the homepage
+    if 'username' not in session:
+        return redirect('/')
+    
+    return render_template('calendar.html', loggedInUser=session['username'], calendar=cal, days=cal.createCalendar())
 
 @app.route('/AddUser', methods = ['POST'])
 def addUser():
