@@ -1,10 +1,13 @@
 from datetime import datetime, timedelta
 
 class CalendarEvent:
-    def __init__(self, title, description, cal_type):
+    def __init__(self, evt_number, title, description, cal_type):
+        self.evt_number = evt_number
         self.title = title
         self.description = description
         self.cal_type = cal_type
+    def getEventNumber(self):
+        return self.evt_number
     def getTitle(self):
         return self.title
     def getDesc(self):
@@ -13,13 +16,16 @@ class CalendarEvent:
         return self.cal_type
 
 class ArmyCalendarDay:
-    def __init__(self, dayName, day, muted):
+    def __init__(self, fullDateString, dayName, day, muted):
+        self.fullDateString = fullDateString
         self.day = day
         self.muted = muted
         self.dayName = dayName
         self.events = []
     def isMuted(self):
         return self.muted
+    def getfullDateString(self):
+        return self.fullDateString
     def getDay(self):
         return self.day
     def getName(self):
@@ -33,7 +39,7 @@ class ArmyCalendar:
     def __init__(self):
         self.fullDate = datetime.today()
     def getMonth(self):
-        return self.fullDate.strftime("%B")
+        return self.fullDate.strftime('%B')
     def getYear(self):
         return self.fullDate.year
     def createCalendar(self):
@@ -46,7 +52,7 @@ class ArmyCalendar:
         # Get the start of current months day (number) as well as the end of previous months day (number)
         startDay = datetime.today().replace(day=1)
         lastPrevDay = startDay - timedelta(days=1)
-        lastPrevDay = lastPrevDay.day
+        #lastPrevDay = lastPrevDay.day
         
         # See how far into the week the start of the month is
         prevDays = 0
@@ -67,7 +73,7 @@ class ArmyCalendar:
         # Get the last day and begin to countdown the days until its Sunday on the calendar
         x = 0
         while prevDays > 0:
-            daysToAdd.append(ArmyCalendarDay(weekdays[x], lastPrevDay - x, True))
+            daysToAdd.append(ArmyCalendarDay((lastPrevDay - timedelta(days=x)).strftime('%Y-%B-%d'), weekdays[x], (lastPrevDay - timedelta(days=x)).day, True))
             x += 1
             prevDays -= 1
         
@@ -87,7 +93,7 @@ class ArmyCalendar:
         # Append all the days up to the last day as non-muted blocks
         day = 1
         while daysToAdd > 0:
-            calendarDays.append(ArmyCalendarDay(startDay.replace(day=day).strftime('%A'), day, False))
+            calendarDays.append(ArmyCalendarDay(startDay.replace(day=day).strftime('%Y-%B-%d'), startDay.replace(day=day).strftime('%A'), day, False))
             day += 1
             daysToAdd -= 1
         
@@ -95,15 +101,16 @@ class ArmyCalendar:
         endDay = endDay + timedelta(days=1)
         nextMonthDay = 1
         while remaindingDays > 0:
-            calendarDays.append(ArmyCalendarDay(endDay.replace(day=nextMonthDay).strftime('%A'), nextMonthDay, True))
+            calendarDays.append(ArmyCalendarDay(endDay.replace(day=nextMonthDay).strftime('%Y-%B-%d'), endDay.replace(day=nextMonthDay).strftime('%A'), nextMonthDay, True))
             nextMonthDay += 1
             remaindingDays -= 1
         
         # Return the fully created month calendar
         
+        z = 0
         for y in calendarDays:
-            y.addEvent(CalendarEvent('Test', 'Test Description', 'bg-danger'))
-            y.addEvent(CalendarEvent('Test', 'Test Description', 'bg-info'))
-            y.addEvent(CalendarEvent('Test', 'Test Description', 'bg-primary'))
+            z+=1
+            y.addEvent(CalendarEvent(len(y.getEvents()) + 1, 'Test{0}'.format(z), 'Test Description', 'bg-danger'))
+            y.addEvent(CalendarEvent(len(y.getEvents()) + 1, 'Test{0}'.format(z), 'Test Description', 'bg-danger'))
         
         return calendarDays
