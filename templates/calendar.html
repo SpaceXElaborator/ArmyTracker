@@ -21,8 +21,7 @@
 	
 	<header>
 		<!-- Side menu bar -->
-		<nav id="sidebarMenu"
-			class="collapse d-lg-block sidebar collapse">
+		<nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse">
 			<div class="position-sticky">
 				<div class="list-group list-group-flush mx-3 mt-4">
 					<a href="tracker" class="list-group-item list-group-item-action py-2 ripple" aria-current="true">
@@ -38,9 +37,9 @@
 		</nav>
 		
 		<!-- Top menu bar -->
-		<nav id="main-navbar" class="navbar navbar-expand lg navbar-light fixed-top bg-white">
+		<nav id="main-navbar" class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
 			<div class="container-fluid">
-				<button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle Navigation">
+				<button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
 					<i class="fas fa-bars"></i>
 				</button>
 				
@@ -92,7 +91,7 @@
 								{% endfor %}
 								<!-- <p class="d-sm-none">No Events</p> -->
 							</div>
-							{% if (x+1) % 6 == 0 %}
+							{% if (x+1) % 7 == 0 %}
 							<div class="w-100"></div>
 							{% endif %}
 						{% endfor %}
