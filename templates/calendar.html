@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link href="{{ url_for('static',filename='styles/bootstrap.css') }}" rel="stylesheet">
+	<link href="{{ url_for('static',filename='styles/main.css') }}" rel="stylesheet">
+	<!-- Cool Logos that are open source -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
+	<!-- Google Fonts Roboto -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
+	<!-- Extra support css for admin dashboard -->
+	<link href="{{ url_for('static',filename='styles/mdb.min.css') }}" rel="stylesheet">
+	<link href="{{ url_for('static',filename='styles/admin.css') }}" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<title>Admin - Tracker</title>
+</head>
+
+<body>
+	
+	<header>
+		<!-- Side menu bar -->
+		<nav id="sidebarMenu"
+			class="collapse d-lg-block sidebar collapse">
+			<div class="position-sticky">
+				<div class="list-group list-group-flush mx-3 mt-4">
+					<a href="tracker" class="list-group-item list-group-item-action py-2 ripple" aria-current="true">
+						<i class="fas fa-server fa-fw me-3"></i>
+						<span>Main Dashboard</span>
+					</a>
+					<a href="calendar" class="list-group-item list-group-item-action py-2 ripple active" aria-current="true">
+						<i class="fas fa-server fa-fw me-3"></i>
+						<span>Calendar</span>
+					</a>
+				</div>
+			</div>
+		</nav>
+		
+		<!-- Top menu bar -->
+		<nav id="main-navbar" class="navbar navbar-expand lg navbar-light fixed-top bg-white">
+			<div class="container-fluid">
+				<button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle Navigation">
+					<i class="fas fa-bars"></i>
+				</button>
+				
+				<div class="navbar-brand">
+					{{ loggedInUser }}
+				</div>
+					
+				<ul class="navbar-nav ms-auto d-flex flex-row">
+					<li class="nav-item dropdown">
+						<a class="nav-link me-3 me-lg-0 dropdown-toggle hidden-arrow" href="#" id="userProfile" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<i class="fas fa-user"></i>
+						</a>
+						<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userProfile">
+							<li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#ChangePassModal">Change Password</button></li>
+						</ul>
+					</li>
+					<li class="nav-item"><a class="nav-link me-3 me-lg-0" href="HandleLogout">Logout</a></li>
+				</ul>
+			</div>
+		</nav>
+	</header>
+	
+	<main style="margin-top: 58px">
+		<div class="container pt-4">
+			<section>
+				<div class="container-fluid">
+					<header>
+						<h4 class="display-4 mb-4 text-center">{{ '{0} {1}'.format(calendar.getMonth(), calendar.getYear()) }}<h4>
+						<div class="row d-none d-sm-flex p-1 bg-dark text-white">
+							<h5 class="col-sm p-1 text-center">Sunday</h5>
+							<h5 class="col-sm p-1 text-center">Monday</h5>
+							<h5 class="col-sm p-1 text-center">Tuesday</h5>
+							<h5 class="col-sm p-1 text-center">Wednesday</h5>
+							<h5 class="col-sm p-1 text-center">Thursday</h5>
+							<h5 class="col-sm p-1 text-center">Friday</h5>
+							<h5 class="col-sm p-1 text-center">Saturday</h5>
+						</div>
+					</header>
+					<div class="row border border-right-0 border-bottom-0">
+						{% for x in range(days|length) %}
+							<div class="day col-sm p-2 border border-left-0 border-top-0 text-truncate d-none d-sm-inline-block bg-light text-muted">
+								<h5 class="row align-items-center">
+									<span class="date col-1">{{ days[x].getDay() }}</span>
+									<small class="col d-sm-none text-center text-muted">{{ days[x].getName() }}</small>
+									<span class="col-1"></span>
+								</h5>
+								{% for y in days[x].getEvents() %}
+								<button class="btn-block event d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small {{ y.getType() }} text-white">{{ y.getTitle() }}</button>
+								{% endfor %}
+								<!-- <p class="d-sm-none">No Events</p> -->
+							</div>
+							{% if (x+1) % 6 == 0 %}
+							<div class="w-100"></div>
+							{% endif %}
+						{% endfor %}
+					</div>
+				</div>
+			</section>
+		</div>
+	</main>
+	
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+	<script type="text/javascript" src="{{ url_for('static',filename='javascript/bootstrap.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static',filename='javascript/mdb.min.js') }}"></script>
+</body>
+
+</html>
