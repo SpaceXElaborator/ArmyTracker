@@ -81,14 +81,14 @@
 					</header>
 					<div class="row border border-right-0 border-bottom-0">
 						{% for x in range(days|length) %}
-							<div class="day col-sm p-2 border border-left-0 border-top-0 text-truncate d-none d-sm-inline-block bg-light text-muted">
+							<div class="day overflow-auto col-sm p-2 border border-left-0 border-top-0 text-truncate d-none d-sm-inline-block bg-light text-muted">
 								<h5 class="row align-items-center">
 									<span class="date col-1">{{ days[x].getDay() }}</span>
 									<small class="col d-sm-none text-center text-muted">{{ days[x].getName() }}</small>
 									<span class="col-1"></span>
 								</h5>
 								{% for y in days[x].getEvents() %}
-								<button class="btn-block event d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small {{ y.getType() }} text-white">{{ y.getTitle() }}</button>
+								<a class="event d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small {{ y.getType() }} text-white">{{ y.getTitle() }}</a>
 								{% endfor %}
 								<!-- <p class="d-sm-none">No Events</p> -->
 							</div>

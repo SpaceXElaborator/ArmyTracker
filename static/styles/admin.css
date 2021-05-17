@@ -9,6 +9,10 @@ body {
   }
 }
 
+.day h5:hover {
+	background: #000000;
+}
+
 @media (max-width:575px) {
 	.display-4 {
 		font-size: 1.5rem;
