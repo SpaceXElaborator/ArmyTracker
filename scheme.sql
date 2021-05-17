@@ -11,3 +11,11 @@ CREATE TABLE IF NOT EXISTS login (
 	username string not null,
 	password string not null
 );
+
+CREATE TABLE IF NOT EXISTS events (
+	id integer primary key autoincrement,
+	title string not null,
+	class string not null,
+	start_date date not null default (datetime('now', 'localtime')),
+	end_date date not null
+);
