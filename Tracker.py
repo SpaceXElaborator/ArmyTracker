@@ -130,11 +130,13 @@ def RemUser():
 @app.route('/HandleLogout')
 def HandleLogout():
 
-    #If they don't have a proper session, redirect them back to the homepage
+    # If they don't have a proper session, redirect them back to the homepage
     if 'username' not in session:
         return redirect('/')
-        
+    
+    # Remove 'username' and 'role' from the session to invalidate
     session.pop('username')
+    session.pop('role')
     return redirect('/')
 
 @app.route('/ChangePassword', methods = ['POST'])
@@ -143,21 +145,23 @@ def ChangePassword():
     if 'username' not in session:
         return redirect('/')
     
+    # Get all form data posted to the url
     curr = request.form['Current']
     NewPass = request.form['NewPass']
     NewPassCheck = request.form['NewPassCheck']
     
     err = None
     
+    # Make sure the new passwords match
     if NewPass == NewPassCheck:
         if db.loginUser(session['username'], curr):
             db.changePass(session['username'], NewPass)
-            # TODO: send toast saying password got updated
         else:
             err = 'Incorrect Password!'
     else:
         err = 'Passwords Do Not Match!'
     
+    # If there is no error, password has been changed correctly. Post that back to previous page
     change = None
     if not err:
         change = 'Password Has Been Changed!'
@@ -165,7 +169,8 @@ def ChangePassword():
     return redirect(url_for(request.referrer.split('/')[-1].split('?')[0], success=change, error=err))
 
 if __name__ == '__main__':
-    db.createUser('sean', 'password1', 'User')
     # Making sure to handle 404 errors
     app.register_error_handler(404, page_not_found)
+    
+    # Begin running the app
     app.run(host="0.0.0.0")
