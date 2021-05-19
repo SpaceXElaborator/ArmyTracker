@@ -44,32 +44,48 @@ def login():
         # If the user successfully logs in, set their session and redirect them to the tracker
         if db.loginUser(user, passW):
             session['username'] = user
+            session['role'] = db.checkRole(user)
             return redirect('/tracker')
         
         print('Wrong password')
         return redirect('/')
-        
-@app.route('/tracker')
-def trackerDash():
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return redirect(url_for('tracker', error='Page Not Found'))
+
+@app.route('/tracker')
+def tracker():
     # If they don't have a proper session, redirect them back to the homepage
     if 'username' not in session:
         return redirect('/')
+    return render_template('tracker.html', loggedInUser=session['username'], role=session['role'], success=request.args.get('success'), error=request.args.get('error'))
+
+@app.route('/soldier')
+def soldier():
+
+    # If they don't have a proper session, redirect them back to the homepage
+    if 'username' not in session or 'role' not in session:
+        return redirect('/')
+    
+    # If they don't have permission to be here, redirect them back to their previous page
+    if session['role'] != 'Admin':
+        return redirect(url_for('tracker', error='No Access'))
     
     # If they login, set their name in the top left corner of the page
-    return render_template('tracker.html', loggedInUser=session['username'], users=db.query('SELECT * FROM users'), error=request.args.get('error'))
+    return render_template('soldiers.html', loggedInUser=session['username'], role=session['role'], users=db.query('SELECT * FROM users'), success=request.args.get('success'), error=request.args.get('error'))
 
 @app.route('/calendar')
-def eventCalendar():
+def calendar():
     
     # If they don't have a proper session, redirect them back to the homepage
     if 'username' not in session:
         return redirect('/')
     
-    return render_template('calendar.html', loggedInUser=session['username'], calendar=cal, days=cal.createCalendar())
+    return render_template('calendar.html', loggedInUser=session['username'], role=session['role'], calendar=cal, days=cal.createCalendar(), success=request.args.get('success'), error=request.args.get('error'))
 
 @app.route('/AddUser', methods = ['POST'])
-def addUser():
+def AddUser():
     
     #If they don't have a proper session, redirect them back to the homepage
     if 'username' not in session:
@@ -88,10 +104,10 @@ def addUser():
         err = 'User Already Exists!'
     
     # Send them back to the tracker homepage once they have added the user to update the page
-    return redirect(url_for('trackerDash', error=err))
+    return redirect(url_for('soldierView', error=err))
 
 @app.route('/RemUser', methods = ['POST'])
-def remUser():
+def RemUser():
     
     #If they don't have a proper session, redirect them back to the homepage
     if 'username' not in session:
@@ -109,10 +125,10 @@ def remUser():
         err = 'User Does Not Exists!'
     
     # Send them back to the tracker homepage once they have added the user to update the page    
-    return redirect(url_for('trackerDash', error=err))
+    return redirect(url_for('soldierView', error=err))
 
 @app.route('/HandleLogout')
-def logout():
+def HandleLogout():
 
     #If they don't have a proper session, redirect them back to the homepage
     if 'username' not in session:
@@ -122,7 +138,7 @@ def logout():
     return redirect('/')
 
 @app.route('/ChangePassword', methods = ['POST'])
-def changePass():
+def ChangePassword():
     #If they don't have a proper session, redirect them back to the homepage
     if 'username' not in session:
         return redirect('/')
@@ -141,8 +157,15 @@ def changePass():
             err = 'Incorrect Password!'
     else:
         err = 'Passwords Do Not Match!'
-        
-    return redirect(url_for('trackerDash', error=err))
+    
+    change = None
+    if not err:
+        change = 'Password Has Been Changed!'
+    
+    return redirect(url_for(request.referrer.split('/')[-1].split('?')[0], success=change, error=err))
 
 if __name__ == '__main__':
+    db.createUser('sean', 'password1', 'User')
+    # Making sure to handle 404 errors
+    app.register_error_handler(404, page_not_found)
     app.run(host="0.0.0.0")
