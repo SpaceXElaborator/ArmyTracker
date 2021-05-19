@@ -25,14 +25,20 @@
 		<nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse">
 			<div class="position-sticky">
 				<div class="list-group list-group-flush mx-3 mt-4">
-					<a href="tracker" class="list-group-item list-group-item-action py-2 ripple" aria-current="true">
+					<a href="/tracker" class="list-group-item list-group-item-action py-2 ripple" aria-current="true">
 						<i class="fas fa-server fa-fw me-3"></i>
 						<span>Main Dashboard</span>
 					</a>
-					<a href="calendar" class="list-group-item list-group-item-action py-2 ripple active" aria-current="true">
+					<a href="#" class="list-group-item list-group-item-action py-2 ripple active" aria-current="true">
 						<i class="far fa-calendar-alt fa-fw me-3"></i>
 						<span>Calendar</span>
 					</a>
+					{% if role == 'Admin' %}
+					<a href="/soldier" class="list-group-item list-group-item-action py-2 ripple" aria-current="true">
+						<i class="fas fa-address-card fa-fw me-3"></i>
+						<span>Soldiers</span>
+					</a>
+					{% endif %}
 				</div>
 			</div>
 		</nav>
@@ -53,7 +59,7 @@
 						<a class="nav-link me-3 me-lg-0 dropdown-toggle hidden-arrow" href="#" id="userProfile" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 							<i class="fas fa-user"></i>
 						</a>
-						<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userProfile">
+						<ul class="dropdown-menu border dropdown-menu-end" aria-labelledby="userProfile">
 							<li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#ChangePassModal">Change Password</button></li>
 						</ul>
 					</li>
@@ -64,6 +70,63 @@
 	</header>
 	
 	<main style="margin-top: 58px">
+		{% if error %}
+			<div class="position-fixed bottom-0 end-0 p-3" style="z-index:5">
+				<div id="toast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+					<div class="toast-header bg-danger">
+						<strong class="me-auto text-black">Something Went Wrong...</strong>
+						<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+					</div>
+					<div class="toast-body">
+						{{ error }}
+					</div>
+				</div>
+			</div>
+		{% endif %}
+		
+		{% if success %}
+			<div class="position-fixed bottom-0 end-0 p-3" style="z-index:5">
+				<div id="toast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+					<div class="toast-header bg-primary">
+						<strong class="me-auto text-black">Updated</strong>
+						<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+					</div>
+					<div class="toast-body">
+						{{ success }}
+					</div>
+				</div>
+			</div>
+		{% endif %}
+	
+		<div class="modal fade" id="ChangePassModal" tabindex="-1" aria-labelledby="ChangePassModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="ChangePassModalLabel">Change Password</h5>
+							<button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<form action="ChangePassword" method="POST">
+								<div class="mb-3">
+									<label for="Current">Current Password</label>
+									<input type="password" name="Current" id="Current" class="form-control" required>
+								</div>
+								<div class="mb-3">
+									<label for="NewPass">New Password</label>
+									<input type="password" name="NewPass" id="NewPass" class="form-control" required>
+								</div>
+								<div class="mb-3">
+									<label for="NewPassCheck">Retype Password</label>
+									<input type="password" name="NewPassCheck" id="NewPassCheck" class="form-control" required>
+								</div>
+								<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+								<button type="submit" class="btn btn-primary">Change Password</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+	
 		<div class="container pt-4">
 			<section>
 				<div class="container-fluid">
@@ -82,20 +145,20 @@
 					
 					<div class="row border-right-0 border-bottom-0">
 						{% for x in range(days|length) %}
-							<a data-bs-toggle="offcanvas" role="button" aria-controls="offCanvas{{ days[x].getfullDateString() }}" href="#offCanvas{{ days[x].getfullDateString() }}" class="col-sm p-2 border border-left-0 border-top-0 d-sm-inline-block" style="color: inherit;">
+							<a data-bs-toggle="offcanvas" role="button" aria-controls="offCanvas{{ days[x].getfullDateString() }}" href="#offCanvas{{ days[x].getfullDateString() }}" class="col-sm p-2 border border-left-0 border-top-0 d-sm-inline-block" style="color: inherit; {% if days[x].isMuted() %}background-color: gray;{% endif %}">
 								<div class="day">
 									<h5 class="row align-items-center">
 										<span class="date col-1">{{ days[x].getDay() }}</span>
-										<small class="col d-sm-none text-center text-muted">{{ days[x].getName() }}</small>
+										<small class="col d-sm-none text-center">{{ days[x].getName() }}</small>
 										<span class="col-1"></span>
 									</h5>
 								</div>
 								<div class="types">
 									{% if days[x].containsImportant() %}
-									<span class="cal_dot" style="background-color: red;"></span>
+									<span class="cal_dot bg-danger"></span>
 									{% endif %}
 									{% if days[x].containsInfo() %}
-									<span class="cal_dot" style="background-color: blue;"></span>
+									<span class="cal_dot bg-info"></span>
 									{% endif %}
 								</div>
 							</a>
@@ -133,6 +196,15 @@
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
 	<script type="text/javascript" src="{{ url_for('static',filename='javascript/mdb.min.js') }}"></script>
+	<script type="text/javascript">
+		$(window).on('load', function() {
+			var toasts = [].slice.call(document.querySelectorAll('.toast'))
+			var toastList = toasts.map(function(toast) {
+				return new bootstrap.Toast(toast);
+			});
+			toastList.forEach(toast => toast.show());
+		});
+	</script>
 </body>
 
 </html>
