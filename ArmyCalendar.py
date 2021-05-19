@@ -119,16 +119,9 @@ class ArmyCalendar:
             nextMonthDay += 1
             remaindingDays -= 1
         
+        # ---- DEBUG ----
+        # calendarDays[2].addEvent(CalendarEvent(len(calendarDays[2].getEvents()) + 1, 'Test{0}'.format(2), 'Test Description', 'bg-info'))
+        # ---- DEBUG ----
+        
         # Return the fully created month calendar
-        
-        #z = 0
-        #for y in calendarDays:
-        #    z+=1
-        #    y.addEvent(CalendarEvent(len(y.getEvents()) + 1, 'Test{0}'.format(z), 'Test Description', 'bg-info'))
-        #    y.addEvent(CalendarEvent(len(y.getEvents()) + 1, 'Test{0}'.format(z), 'Test Description', 'bg-danger'))
-        
-        calendarDays[3].addEvent(CalendarEvent(len(calendarDays[3].getEvents()) + 1, 'Test{0}'.format(1), 'Test Description', 'bg-info'))
-        calendarDays[3].addEvent(CalendarEvent(len(calendarDays[3].getEvents()) + 1, 'Test{0}'.format(2), 'Test Description', 'bg-danger'))
-        calendarDays[2].addEvent(CalendarEvent(len(calendarDays[2].getEvents()) + 1, 'Test{0}'.format(2), 'Test Description', 'bg-info'))
-        
         return calendarDays

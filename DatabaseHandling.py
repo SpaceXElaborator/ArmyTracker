@@ -17,11 +17,14 @@ class Database:
             with open(self.webapp.config['DATABASE'], 'w') as f:
                 pass
       
+        # Open .sql file and read the information and perform the actions to the database.
         with open('scheme.sql', 'r') as f:
             db = self.connect()
             db.cursor().executescript(f.read())
         db.commit()
         db.close()
+        
+        # Create the Admin user if it doesn't exist
         adminExists = self.query('SELECT * FROM login WHERE username = ?', ['admin'], one = True)
         if adminExists == None:
             print('Adding Admin User...')
@@ -69,10 +72,10 @@ class Database:
             return pbkdf2_sha256.verify(password, user[2])
         return False
     
+    # Check the role of the user to setup how the page will look like to different users
     def checkRole(self, username):
         if self.checkUser(username):
             user = self.query('SELECT * FROM login WHERE username = ?', [username.casefold()], one = True)
-            print(user[3])
             return user[3]
         return 'User'
     
