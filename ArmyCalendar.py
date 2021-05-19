@@ -32,6 +32,20 @@ class ArmyCalendarDay:
         return self.dayName
     def getEvents(self):
         return self.events
+    def containsImportant(self):
+        if len(self.getEvents()) == 0:
+            return False
+        for x in self.getEvents():
+            if x.getType() == 'bg-danger':
+                return True
+        return False
+    def containsInfo(self):
+        if len(self.getEvents()) == 0:
+            return False
+        for x in self.getEvents():
+            if x.getType() == 'bg-info':
+                return True
+        return False
     def addEvent(self, x):
         self.events.append(x)
 
@@ -107,10 +121,14 @@ class ArmyCalendar:
         
         # Return the fully created month calendar
         
-        z = 0
-        for y in calendarDays:
-            z+=1
-            y.addEvent(CalendarEvent(len(y.getEvents()) + 1, 'Test{0}'.format(z), 'Test Description', 'bg-danger'))
-            y.addEvent(CalendarEvent(len(y.getEvents()) + 1, 'Test{0}'.format(z), 'Test Description', 'bg-danger'))
+        #z = 0
+        #for y in calendarDays:
+        #    z+=1
+        #    y.addEvent(CalendarEvent(len(y.getEvents()) + 1, 'Test{0}'.format(z), 'Test Description', 'bg-info'))
+        #    y.addEvent(CalendarEvent(len(y.getEvents()) + 1, 'Test{0}'.format(z), 'Test Description', 'bg-danger'))
+        
+        calendarDays[3].addEvent(CalendarEvent(len(calendarDays[3].getEvents()) + 1, 'Test{0}'.format(1), 'Test Description', 'bg-info'))
+        calendarDays[3].addEvent(CalendarEvent(len(calendarDays[3].getEvents()) + 1, 'Test{0}'.format(2), 'Test Description', 'bg-danger'))
+        calendarDays[2].addEvent(CalendarEvent(len(calendarDays[2].getEvents()) + 1, 'Test{0}'.format(2), 'Test Description', 'bg-info'))
         
         return calendarDays

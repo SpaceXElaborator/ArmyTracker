@@ -9,7 +9,7 @@ body {
   }
 }
 
-@media (max-width:575px) {
+@media (max-width: 575px) {
 	.display-4 {
 		font-size: 1.5rem;
 	}
@@ -33,6 +33,20 @@ body {
 	.day:hover {
 		background-color: #cccccc;
 	}
+}
+
+.day .types {
+	bottom: 0;
+	left: 0;
+	position: absolute;
+	display: inline;
+}
+
+.cal_dot {
+	height: 10px;
+	width: 10px;
+	border-radius: 50%;
+	display: inline-block;
 }
 
 /* Sidebar */

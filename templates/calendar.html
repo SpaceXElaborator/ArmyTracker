@@ -90,6 +90,14 @@
 										<span class="col-1"></span>
 									</h5>
 								</div>
+								<div class="types">
+									{% if days[x].containsImportant() %}
+									<span class="cal_dot" style="background-color: red;"></span>
+									{% endif %}
+									{% if days[x].containsInfo() %}
+									<span class="cal_dot" style="background-color: blue;"></span>
+									{% endif %}
+								</div>
 							</a>
 							{% if (x+1) % 7 == 0 %}
 							<div class="w-100"></div>
@@ -107,12 +115,16 @@
 				<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 			</div>
 			<div class="offcanvas-body overflow-auto">
-				{% for y in days[x].getEvents() %}
+				{% if days[x].getEvents()|length == 0 %}
+					<span>No Events...</span>
+				{% else %}
+					{% for y in days[x].getEvents() %}
 					<a class="d-block p-1 pl-2 pr-2 mb-1 rounded small {{ y.getType() }} text-white">{{ y.getTitle() }}</a>
 					<div class="alert-dark">
 						{{ y.getDesc() }}
 					</div>
-				{% endfor %}
+					{% endfor %}
+				{% endif %}
 			</div>
 		</div>
 		{% endfor %}
