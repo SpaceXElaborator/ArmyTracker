@@ -25,7 +25,7 @@ class Database:
         adminExists = self.query('SELECT * FROM login WHERE username = ?', ['admin'], one = True)
         if adminExists == None:
             print('Adding Admin User...')
-            self.createUser('admin', 'password1')
+            self.createUser('admin', 'password1', 'Admin')
         
     # Create connection to SQLite Database file from configuration
     def connect(self):
@@ -51,23 +51,32 @@ class Database:
         return (True if userFound else False)
     
     # Create a given user for the login portion using pbkdf2_sha256 recommended database password storing
-    def createUser(self, username, password):
+    def createUser(self, username, password, role):
         if not self.checkUser(username):
             hashPass = pbkdf2_sha256.hash(password)
             db = self.connect()
             # Uses None to Auto-Increment value into Database
-            db.execute('INSERT INTO login VALUES(?, ?, ?)', [None, username.casefold(), hashPass])
+            db.execute('INSERT INTO login VALUES(?, ?, ?, ?)', [None, username.casefold(), hashPass, role])
             db.commit()
             db.close()
             return True
         return False
-        
+       
+    # Verify the entered password of the website with the password hash stored in the database
     def loginUser(self, username, password):
         if self.checkUser(username):
             user = self.query('SELECT * FROM login WHERE username = ?', [username.casefold()], one = True)
             return pbkdf2_sha256.verify(password, user[2])
         return False
     
+    def checkRole(self, username):
+        if self.checkUser(username):
+            user = self.query('SELECT * FROM login WHERE username = ?', [username.casefold()], one = True)
+            print(user[3])
+            return user[3]
+        return 'User'
+    
+    # Add a soldier that will be tracked into the database for viewing
     def addTrackerUser(self, first, last, rank, squad):
         if not self.checkTrackedUser(first, last):
             db = self.connect()
@@ -77,12 +86,15 @@ class Database:
             return True
         return False
     
+    # Change a login-users password
     def changePass(self, username, newpass):
         hashPass = pbkdf2_sha256.hash(newpass)
         db = self.connect()
         db.execute('UPDATE login SET password = ? WHERE username = ?', [hashPass, username])
         db.commit()
         db.close()
+    
+    # Remove a soldier from the tracked list to no longer view them
     def remTrackerUser(self, first, last):
         if self.checkTrackedUser(first, last):
             db = self.connect()
