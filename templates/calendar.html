@@ -51,7 +51,7 @@
 				</button>
 				
 				<div class="navbar-brand">
-					{{ loggedInUser.capitalize() }}
+					{{ loggedInUser }}
 				</div>
 					
 				<ul class="navbar-nav ms-auto d-flex flex-row">
@@ -145,7 +145,7 @@
 					
 					<div class="row border-right-0 border-bottom-0">
 						{% for x in range(days|length) %}
-							<a data-bs-toggle="offcanvas" role="button" aria-controls="offCanvas{{ days[x].getfullDateString() }}" href="#offCanvas{{ days[x].getfullDateString() }}" class="col-sm p-2 border border-left-0 border-top-0 d-sm-inline-block" style="color: inherit; {% if days[x].isMuted() %}background-color: gray;{% endif %}">
+							<a data-bs-toggle="modal" role="button" aria-controls="modal{{ days[x].getfullDateString() }}" href="#modal{{ days[x].getfullDateString() }}" class="col-sm p-2 border border-left-0 border-top-0 d-sm-inline-block" style="color: inherit; {% if days[x].isMuted() %}background-color: gray;{% endif %}">
 								<div class="day">
 									<h5 class="row align-items-center">
 										<span class="date col-1">{{ days[x].getDay() }}</span>
@@ -153,14 +153,7 @@
 										<span class="col-1"></span>
 									</h5>
 								</div>
-								<div class="types">
-									{% if days[x].containsImportant() %}
-									<span class="cal_dot bg-danger"></span>
-									{% endif %}
-									{% if days[x].containsInfo() %}
-									<span class="cal_dot bg-info"></span>
-									{% endif %}
-								</div>
+								<!--Deleted Code-->
 							</a>
 							{% if (x+1) % 7 == 0 %}
 							<div class="w-100"></div>
@@ -172,22 +165,62 @@
 		</div>
 		
 		{% for x in range(days|length) %}
-		<div class="offcanvas offcanvas-end" tabindex="-1" id="offCanvas{{ days[x].getfullDateString() }}" aria-labelledby="offCanvas{{ days[x].getfullDateString() }}Label">
-			<div class="offcanvas-header">
-				<h5 class="offcanvas-title" id="offCanvas{{ days[x].getfullDateString() }}Label">{{ days[x].getfullDateString() }}</h5>
-				<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-			</div>
-			<div class="offcanvas-body overflow-auto">
-				{% if days[x].getEvents()|length == 0 %}
-					<span>No Events...</span>
-				{% else %}
-					{% for y in days[x].getEvents() %}
-					<a class="d-block p-1 pl-2 pr-2 mb-1 rounded small {{ y.getType() }} text-white">{{ y.getTitle() }}</a>
-					<div class="alert-dark">
-						{{ y.getDesc() }}
+		<div class="modal fade" id="modal{{ days[x].getfullDateString() }}" aria-labelledby="modal{{ days[x].getfullDateString() }}Label" aria-hidden="true">
+			<div class="modal-dialog modal-fullscreen modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="modal{{ days[x].getfullDateString() }}Label">{{ days[x].getfullDateString() }}</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
-					{% endfor %}
-				{% endif %}
+					<div class="modal-body">
+						<div class="container-fluid">
+							<table class="table table-dark table-striped">
+								<thead>
+									<tr>
+										<th scope="col">Soldier</th>
+										<th scope="col">06:30</th>
+										<th scope="col">07:00</th>
+										<th scope="col">07:30</th>
+										<th scope="col">08:00</th>
+										<th scope="col">08:30</th>
+										<th scope="col">09:00</th>
+										<th scope="col">09:30</th>
+										<th scope="col">10:00</th>
+										<th scope="col">10:30</th>
+										<th scope="col">11:00</th>
+										<th scope="col">11:30</th>
+										<th scope="col">12:00</th>
+										<th scope="col">12:30</th>
+										<th scope="col">13:00</th>
+										<th scope="col">13:30</th>
+										<th scope="col">14:00</th>
+										<th scope="col">14:30</th>
+										<th scope="col">15:00</th>
+										<th scope="col">15:30</th>
+										<th scope="col">16:00</th>
+										<th scope="col">16:30</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for sold in soldiers %}
+										{% if sold[1] != 'admin' %}
+										<tr>
+											<th scope="row">{{ sold[4] }}</th>
+											{% for z in days[x].buildUserEvents(sold[4]) %}
+											<td class="align-middle">{{ z|safe }}</td>
+											{% endfor %}
+										</tr>
+										{% endif %}
+									{% endfor %}
+								</tbody>
+							</table>
+							<!-- Deleted Code -->
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn" data-bs-dismiss="modal">Close</button>
+					</div>
+				</div>
 			</div>
 		</div>
 		{% endfor %}

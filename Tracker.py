@@ -9,10 +9,11 @@ Created on May 13, 2021
 # Python Imports
 from flask import Flask, render_template, request, redirect, session, url_for
 import calendar
+from datetime import datetime
 
 # Local Imports
 from DatabaseHandling import Database
-from ArmyCalendar import ArmyCalendar
+from ArmyCalendar import ArmyCalendar, CalendarEvent
 
 app = Flask(__name__)
 
@@ -43,7 +44,7 @@ def login():
         
         # If the user successfully logs in, set their session and redirect them to the tracker
         if db.loginUser(user, passW):
-            session['username'] = user
+            session['username'] = db.query('SELECT * FROM login WHERE username = ?', [user], one = True)[4]
             session['role'] = db.checkRole(user)
             return redirect('/tracker')
         
@@ -82,7 +83,7 @@ def calendar():
     if 'username' not in session:
         return redirect('/')
     
-    return render_template('calendar.html', loggedInUser=session['username'], role=session['role'], calendar=cal, days=cal.createCalendar(), success=request.args.get('success'), error=request.args.get('error'))
+    return render_template('calendar.html', loggedInUser=session['username'], role=session['role'], calendar=cal, days=cal.createCalendar(), soldiers=db.query('SELECT * FROM login'), success=request.args.get('success'), error=request.args.get('error'))
 
 @app.route('/AddUser', methods = ['POST'])
 def AddUser():
@@ -103,8 +104,11 @@ def AddUser():
     if not db.addTrackerUser(first, last, rank, squad):
         err = 'User Already Exists!'
     
+    # Add the users login account
+    db.createUser('{0}{1}'.format(first.lower()[0], last.lower()), 'password1', 'User', '{0} {1}'.format(rank, last.capitalize()))
+    
     # Send them back to the tracker homepage once they have added the user to update the page
-    return redirect(url_for('soldierView', error=err))
+    return redirect(url_for('soldier', error=err))
 
 @app.route('/RemUser', methods = ['POST'])
 def RemUser():
@@ -124,8 +128,12 @@ def RemUser():
     if not db.remTrackerUser(first, last):
         err = 'User Does Not Exists!'
     
+    # Remove the user login account
+    if not db.remUser(first, last):
+        err = 'Couldn\'t Find User Based On Name'
+    
     # Send them back to the tracker homepage once they have added the user to update the page    
-    return redirect(url_for('soldierView', error=err))
+    return redirect(url_for('soldier', error=err))
 
 @app.route('/HandleLogout')
 def HandleLogout():
@@ -171,6 +179,13 @@ def ChangePassword():
 if __name__ == '__main__':
     # Making sure to handle 404 errors
     app.register_error_handler(404, page_not_found)
+    
+    # Add testing event
+    db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'Test', 'Super long test', 'bg-info', datetime.strptime('2021-May-19', '%Y-%B-%d'), '06:30', datetime.strptime('2021-May-19', '%Y-%B-%d'), '08:30'))
+    db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'Test', 'Super long test', 'bg-info', datetime.strptime('2021-May-19', '%Y-%B-%d'), '16:00', datetime.strptime('2021-May-19', '%Y-%B-%d'), '16:30'))
+    db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'Test', 'Super long test', 'bg-danger', datetime.strptime('2021-May-19', '%Y-%B-%d'), '16:30', datetime.strptime('2021-May-19', '%Y-%B-%d'), '17:00'))
+    db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'Test', 'Super long test', 'bg-light', datetime.strptime('2021-May-19', '%Y-%B-%d'), '15:00', datetime.strptime('2021-May-19', '%Y-%B-%d'), '16:00'))
+    db.addEvent(cal, CalendarEvent('SGT Hartman', 1, 'Test', 'Super long test', 'bg-info', datetime.today(), '14:00', datetime.strptime('2021-May-19', '%Y-%B-%d'), '15:00'))
     
     # Begin running the app
     app.run(host="0.0.0.0")

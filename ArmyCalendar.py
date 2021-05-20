@@ -1,11 +1,26 @@
 from datetime import datetime, timedelta
 
+class CalendarEventManager:
+    def __init__(self):
+        self.events = []
+    def addEvent(self, event):
+        self.events.append(event)
+    def getEvents(self):
+        return self.events
+
 class CalendarEvent:
-    def __init__(self, evt_number, title, description, cal_type):
+    def __init__(self, user, evt_number, title, description, cal_type, day, time, stop_day, stop_time):
         self.evt_number = evt_number
         self.title = title
         self.description = description
         self.cal_type = cal_type
+        self.time = time
+        self.day = day
+        self.user = user
+        self.stop_day = stop_day
+        self.stop_time = stop_time
+    def getUser(self):
+        return self.user
     def getEventNumber(self):
         return self.evt_number
     def getTitle(self):
@@ -14,14 +29,22 @@ class CalendarEvent:
         return self.description
     def getType(self):
         return self.cal_type
+    def getDay(self):
+        return self.day
+    def getTime(self):
+        return self.time
+    def getStopTime(self):
+        return self.stop_time
+    def getStopDay(self):
+        return self.stop_day
 
 class ArmyCalendarDay:
-    def __init__(self, fullDateString, dayName, day, muted):
+    def __init__(self, manager, fullDateString, dayName, day, muted):
+        self.manager = manager
         self.fullDateString = fullDateString
         self.day = day
         self.muted = muted
         self.dayName = dayName
-        self.events = []
     def isMuted(self):
         return self.muted
     def getfullDateString(self):
@@ -30,9 +53,7 @@ class ArmyCalendarDay:
         return self.day
     def getName(self):
         return self.dayName
-    def getEvents(self):
-        return self.events
-    def containsImportant(self):
+    '''def containsImportant(self):
         if len(self.getEvents()) == 0:
             return False
         for x in self.getEvents():
@@ -45,17 +66,46 @@ class ArmyCalendarDay:
         for x in self.getEvents():
             if x.getType() == 'bg-info':
                 return True
-        return False
+        return False'''
     def addEvent(self, x):
         self.events.append(x)
+    def buildUserEvents(self, user):
+        userEvents = []
+        
+        hour = 6
+        minute = 30
+        added = False
+        for x in range(21):
+            for event in self.manager.getEvents():
+                if event.getUser() == user:
+                    if event.getDay().strftime('%Y-%B-%d') == self.fullDateString:
+                        if event.getTime() == '{:02d}:{:02d}'.format(hour, minute):
+                            userEvents.append('<span class="cal_dot" style="background-color: blue;"></span>')
+                            added = True
+            if minute == 30:
+                hour += 1
+                minute = 0
+            else:
+                minute = 30
+            if added:
+                added = False
+                continue
+            else:
+                userEvents.append('')
+        return userEvents
 
 class ArmyCalendar:
     def __init__(self):
         self.fullDate = datetime.today()
+        self.manager = CalendarEventManager()
     def getMonth(self):
         return self.fullDate.strftime('%B')
+    def setMonthYear(self, month, year):
+        self.fullDate = datetime.strptime('{0}-{1}-1', '%Y-%M-%d')
     def getYear(self):
         return self.fullDate.year
+    def addEvent(self, evt):
+        self.manager.addEvent(evt)
     def createCalendar(self):
         # Create an empty list to populate down below
         calendarDays = []
@@ -87,7 +137,7 @@ class ArmyCalendar:
         # Get the last day and begin to countdown the days until its Sunday on the calendar
         x = 0
         while prevDays > 0:
-            daysToAdd.append(ArmyCalendarDay((lastPrevDay - timedelta(days=x)).strftime('%Y-%B-%d'), weekdays[x], (lastPrevDay - timedelta(days=x)).day, True))
+            daysToAdd.append(ArmyCalendarDay(self.manager, (lastPrevDay - timedelta(days=x)).strftime('%Y-%B-%d'), weekdays[x], (lastPrevDay - timedelta(days=x)).day, True))
             x += 1
             prevDays -= 1
         
@@ -107,7 +157,7 @@ class ArmyCalendar:
         # Append all the days up to the last day as non-muted blocks
         day = 1
         while daysToAdd > 0:
-            calendarDays.append(ArmyCalendarDay(startDay.replace(day=day).strftime('%Y-%B-%d'), startDay.replace(day=day).strftime('%A'), day, False))
+            calendarDays.append(ArmyCalendarDay(self.manager, startDay.replace(day=day).strftime('%Y-%B-%d'), startDay.replace(day=day).strftime('%A'), day, False))
             day += 1
             daysToAdd -= 1
         
@@ -115,13 +165,9 @@ class ArmyCalendar:
         endDay = endDay + timedelta(days=1)
         nextMonthDay = 1
         while remaindingDays > 0:
-            calendarDays.append(ArmyCalendarDay(endDay.replace(day=nextMonthDay).strftime('%Y-%B-%d'), endDay.replace(day=nextMonthDay).strftime('%A'), nextMonthDay, True))
+            calendarDays.append(ArmyCalendarDay(self.manager, endDay.replace(day=nextMonthDay).strftime('%Y-%B-%d'), endDay.replace(day=nextMonthDay).strftime('%A'), nextMonthDay, True))
             nextMonthDay += 1
             remaindingDays -= 1
-        
-        # ---- DEBUG ----
-        # calendarDays[2].addEvent(CalendarEvent(len(calendarDays[2].getEvents()) + 1, 'Test{0}'.format(2), 'Test Description', 'bg-info'))
-        # ---- DEBUG ----
         
         # Return the fully created month calendar
         return calendarDays
