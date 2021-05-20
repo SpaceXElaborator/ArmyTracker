@@ -28,7 +28,7 @@ class Database:
         adminExists = self.query('SELECT * FROM login WHERE username = ?', ['admin'], one = True)
         if adminExists == None:
             print('Adding Admin User...')
-            self.createUser('admin', 'password1', 'Admin')
+            self.createUser('admin', 'password1', 'Admin', 'Administrator')
         
     # Create connection to SQLite Database file from configuration
     def connect(self):
@@ -54,28 +54,39 @@ class Database:
         return (True if userFound else False)
     
     # Create a given user for the login portion using pbkdf2_sha256 recommended database password storing
-    def createUser(self, username, password, role):
+    def createUser(self, username, password, role, name):
         if not self.checkUser(username):
             hashPass = pbkdf2_sha256.hash(password)
             db = self.connect()
             # Uses None to Auto-Increment value into Database
-            db.execute('INSERT INTO login VALUES(?, ?, ?, ?)', [None, username.casefold(), hashPass, role])
+            db.execute('INSERT INTO login VALUES(?, ?, ?, ?, ?)', [None, username, hashPass, role, name])
             db.commit()
             db.close()
             return True
         return False
-       
+    
+    # Remove a given user from the login portion
+    def remUser(self, first, last):
+        username = '{0}{1}'.format(first.lower()[0], last.lower())
+        if self.checkUser(username):
+            db = self.connect()
+            db.execute('DELETE FROM login WHERE username = ?', [username])
+            db.commit()
+            db.close()
+            return True
+        return False
+    
     # Verify the entered password of the website with the password hash stored in the database
     def loginUser(self, username, password):
         if self.checkUser(username):
-            user = self.query('SELECT * FROM login WHERE username = ?', [username.casefold()], one = True)
+            user = self.query('SELECT * FROM login WHERE username = ?', [username], one = True)
             return pbkdf2_sha256.verify(password, user[2])
         return False
     
     # Check the role of the user to setup how the page will look like to different users
     def checkRole(self, username):
         if self.checkUser(username):
-            user = self.query('SELECT * FROM login WHERE username = ?', [username.casefold()], one = True)
+            user = self.query('SELECT * FROM login WHERE username = ?', [username], one = True)
             return user[3]
         return 'User'
     
@@ -83,7 +94,7 @@ class Database:
     def addTrackerUser(self, first, last, rank, squad):
         if not self.checkTrackedUser(first, last):
             db = self.connect()
-            db.execute('INSERT INTO users VALUES(?, ?, ?, ?, ?)', [None, first.capitalize(), last.capitalize(), rank.upper(), int(squad)])
+            db.execute('INSERT INTO users VALUES(?, ?, ?, ?, ?, ?)', [None, first.capitalize(), last.capitalize(), rank.upper(), '', int(squad)])
             db.commit()
             db.close()
             return True
@@ -106,3 +117,9 @@ class Database:
             db.close()
             return True
         return False
+        
+    def addEvent(self, cal, event):
+        cal.addEvent(event)
+        
+        #db = self.connect()
+        #db.execute('INSERT INTO events VALUES (?, ?, ?, ?, ?, ?)', [None, event.getTitle(), event.getType(), event.getDay(), event.getTime(), event.getUser()])
