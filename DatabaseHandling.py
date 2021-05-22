@@ -119,7 +119,9 @@ class Database:
         return False
         
     def addEvent(self, cal, event):
-        cal.addEvent(event)
-        
         #db = self.connect()
-        #db.execute('INSERT INTO events VALUES (?, ?, ?, ?, ?, ?)', [None, event.getTitle(), event.getType(), event.getDay(), event.getTime(), event.getUser()])
+        #db.execute('INSERT INTO events VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [None, event.getTitle(), event.getType(), event.getDay(), event.getTime(), event.getStopDay(), event.getStopTime(), event.getUser()])
+        #db.commit()
+        #db.close()
+        
+        cal.addEvent(event)

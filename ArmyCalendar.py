@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from flask import redirect
 
 class CalendarEventManager:
     def __init__(self):
@@ -7,6 +8,16 @@ class CalendarEventManager:
         self.events.append(event)
     def getEvents(self):
         return self.events
+
+class UserCalendarDayEvent:
+    def __init__(self):
+        self.Str = []
+    def __repr__(self):
+        return str(self.Str)
+    def addHTMLString(self, strToAdd):
+        self.Str.append(strToAdd)
+    def getHTMLString(self):
+        return self.Str
 
 class CalendarEvent:
     def __init__(self, user, evt_number, title, description, cal_type, day, time, stop_day, stop_time):
@@ -53,51 +64,66 @@ class ArmyCalendarDay:
         return self.day
     def getName(self):
         return self.dayName
-    '''def containsImportant(self):
-        if len(self.getEvents()) == 0:
-            return False
-        for x in self.getEvents():
-            if x.getType() == 'bg-danger':
-                return True
-        return False
-    def containsInfo(self):
-        if len(self.getEvents()) == 0:
-            return False
-        for x in self.getEvents():
-            if x.getType() == 'bg-info':
-                return True
-        return False'''
     def addEvent(self, x):
         self.events.append(x)
     def buildUserEvents(self, user):
         userEvents = []
         
-        hour = 6
-        minute = 30
-        added = False
-        for x in range(21):
-            for event in self.manager.getEvents():
+        for event in self.manager.getEvents():
+            dayDate = datetime.strptime('{0} 00:00:00'.format(self.fullDateString), '%Y-%B-%d %H:%M:%S')
+            eventStartDate = datetime.strptime('{0}'.format(event.getDay()), '%Y-%m-%d %H:%M:%S')
+            eventStopDate = datetime.strptime('{0}'.format(event.getStopDay()), '%Y-%m-%d %H:%M:%S')
+            
+            # Check if dates are within range
+            if eventStopDate >= dayDate or dayDate >= eventStartDate:
                 if event.getUser() == user:
-                    if event.getDay().strftime('%Y-%B-%d') == self.fullDateString:
-                        if event.getTime() == '{:02d}:{:02d}'.format(hour, minute):
-                            userEvents.append('<span class="cal_dot" style="background-color: blue;"></span>')
-                            added = True
-            if minute == 30:
-                hour += 1
-                minute = 0
-            else:
-                minute = 30
-            if added:
-                added = False
-                continue
-            else:
-                userEvents.append('')
-        return userEvents
+                    hour = 6
+                    minute = 30
+                    added = False
+                    htmlString = UserCalendarDayEvent()
+                    for x in range(21):
+                        # Get each date that the program will need to figure out checks
+                        dayTime = dayDate.replace(hour=hour, minute=minute)
+                        
+                        # Be inclusive for both start and end date
+                        if eventStopDate >= dayTime or dayTime >= eventStartDate:
+                            # Format the startDate and endDate to get their time for comparring
+                            eventStartTime = eventStartDate.replace(hour=int(event.getTime().split(':')[0]), minute=int(event.getTime().split(':')[1]))
+                            eventStopTime = eventStopDate.replace(hour=int(event.getStopTime().split(':')[0]), minute=int(event.getStopTime().split(':')[1]))
+                            
+                            # The stop date/time is exlusive and the start time is inclusive
+                            if eventStopTime > dayTime and dayTime >= eventStartTime:
+                                htmlString.addHTMLString('<span class="cal_dot" data-bs-toggle="tooltip" data-bs-placement="top" title="' + event.getTitle() + '" style="background-color: ' + event.getType() + ';"></span>')
+                                added = True
+                        
+                        if minute == 30:
+                            hour += 1
+                            minute = 0
+                        else:
+                            minute = 30
+                        
+                        if added:
+                            added = False
+                            continue
+                        else:
+                            htmlString.addHTMLString('<span class="cal_dot"></span>')
+                    userEvents.append(htmlString)
+        
+        masterDay = []
+        for x in range(21):
+            masterDay.append('')
+        
+        for evt in userEvents:
+            for x in range(len(evt.getHTMLString())):
+                masterDay[x] = '{0}{1}'.format(masterDay[x], evt.getHTMLString()[x])
+        return masterDay
 
 class ArmyCalendar:
-    def __init__(self):
+    def __init__(self, database):
         self.fullDate = datetime.today()
         self.manager = CalendarEventManager()
+        self.calendarDays = []
+        self.database = database
     def getMonth(self):
         return self.fullDate.strftime('%B')
     def setMonthYear(self, month, year):
@@ -106,10 +132,22 @@ class ArmyCalendar:
         return self.fullDate.year
     def addEvent(self, evt):
         self.manager.addEvent(evt)
+    def getCalendarDays(self):
+        return self.calendarDays
+    def getPreviousDay(self, date):
+        day = datetime.strptime(date, '%Y-%B-%d') - timedelta(days=1)
+        return day.strftime('%Y-%B-%d')
+    def getNextDay(self, date):
+        day = datetime.strptime(date, '%Y-%B-%d') + timedelta(days=1)
+        return day.strftime('%Y-%B-%d')
+    def buildDayFor(self, fulldate, user):
+        for days in self.calendarDays:
+            if fulldate == days.getfullDateString():
+                return days.buildUserEvents(user)
     def createCalendar(self):
-        # Create an empty list to populate down below
-        calendarDays = []
-        
+        # Reset the calendar
+        self.calendarDays = []
+    
         # Get all days to compare them to the first day of current month
         weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
         
@@ -124,12 +162,6 @@ class ArmyCalendar:
             if startDay.strftime('%A') == days:
                 break
             prevDays += 1
-        # ---- DEBUG ----
-        # Setting my days to refer to as I code the calendar out
-        # May 2021
-        # prevDays = 6
-        # lastPrevDay = 30
-        # ---- DEBUG ----
         
         # Create a new empty array to populate with the previous months days to add to this months as a muted block
         daysToAdd = []
@@ -145,19 +177,19 @@ class ArmyCalendar:
         reversedDays = daysToAdd[::-1]
         
         # Add the muted days to the list
-        calendarDays.extend(reversedDays)
+        self.calendarDays.extend(reversedDays)
         
         # Quick one-liner to get the end of the current months day (number)
         endDay = ((startDay + timedelta(days=32)).replace(day=1) - timedelta(days=1))
         
         # Each calender will hold 42 days. For a nice looking block. Subtract the length of currently added days AND the remaining days to add
-        remaindingDays = 42-len(calendarDays)-endDay.day
-        daysToAdd = 42 - len(calendarDays) - remaindingDays
+        remaindingDays = 42-len(self.calendarDays)-endDay.day
+        daysToAdd = 42 - len(self.calendarDays) - remaindingDays
         
         # Append all the days up to the last day as non-muted blocks
         day = 1
         while daysToAdd > 0:
-            calendarDays.append(ArmyCalendarDay(self.manager, startDay.replace(day=day).strftime('%Y-%B-%d'), startDay.replace(day=day).strftime('%A'), day, False))
+            self.calendarDays.append(ArmyCalendarDay(self.manager, startDay.replace(day=day).strftime('%Y-%B-%d'), startDay.replace(day=day).strftime('%A'), day, False))
             day += 1
             daysToAdd -= 1
         
@@ -165,9 +197,9 @@ class ArmyCalendar:
         endDay = endDay + timedelta(days=1)
         nextMonthDay = 1
         while remaindingDays > 0:
-            calendarDays.append(ArmyCalendarDay(self.manager, endDay.replace(day=nextMonthDay).strftime('%Y-%B-%d'), endDay.replace(day=nextMonthDay).strftime('%A'), nextMonthDay, True))
+            self.calendarDays.append(ArmyCalendarDay(self.manager, endDay.replace(day=nextMonthDay).strftime('%Y-%B-%d'), endDay.replace(day=nextMonthDay).strftime('%A'), nextMonthDay, True))
             nextMonthDay += 1
             remaindingDays -= 1
         
         # Return the fully created month calendar
-        return calendarDays
+        return self.calendarDays

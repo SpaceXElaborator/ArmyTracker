@@ -44,9 +44,13 @@ body {
 
 .cal_dot {
 	height: 10px;
-	width: 10px;
-	border-radius: 50%;
+	width: 100%;
 	display: inline-block;
+}
+
+tr td {
+	padding: 0 !important;
+	margin: 0 !important;
 }
 
 /* Sidebar */

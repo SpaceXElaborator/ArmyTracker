@@ -19,7 +19,9 @@ CREATE TABLE IF NOT EXISTS events (
 	id integer primary key autoincrement,
 	title string not null,
 	class string not null,
-	start_date date not null default (datetime('now', 'localtime')),
+	start_date string not null,
 	hourtime string not null,
+	end_date string not null,
+	end_time string not null,
 	user_request string not null
 );
