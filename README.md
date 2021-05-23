@@ -1,5 +1,5 @@
 # ArmyTracker
-A Simple Army Tracker that allows for a user to log-in and view soldiers rank, name, and squad position. Validation is in place to be able to remove and add soldiers as well as change the password for the default admin created on first launch.
+An all-in-one Tracker for military companies. Easy setup and installation to get started and simple buttons and viewing for anyone to be able to use. Starting from version 7.0 onward, admins/Platoon Sergeants will be able to start editing what is tracked and presented when viewing soliders. Comes with a calendar to see what soldiers are doing for any specific day. Soldiers can request Appointments and Team Leads have the ability to accept or deny with messages to be sent back to the soldier. Tracked information will be added to the calendar without any extra steps besides accepting.
 ## Setup
 1. Download Docker from the [Docker Website](https://www.docker.com/products/docker-desktop)
 2. Download the latest release from the releases section
@@ -18,7 +18,7 @@ To run the application, run the command
 always connect to the website via ```http://172.0.0.1:5000```
 ## Coming Soon
 1. Custom tracker options
-2. Calender events
+2. Calender events [+]
 3. Color to easy show who is red on what
 4. Add/Remove other admins
 5. Add/Remove documents for quicker and easier tracking
