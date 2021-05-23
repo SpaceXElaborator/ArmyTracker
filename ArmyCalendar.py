@@ -66,11 +66,34 @@ class ArmyCalendarDay:
         return self.dayName
     def addEvent(self, x):
         self.events.append(x)
-    def buildUserEvents(self, user):
+
+class ArmyCalendar:
+    def __init__(self, database):
+        self.fullDate = datetime.today()
+        self.manager = CalendarEventManager()
+        self.calendarDays = []
+        self.database = database
+    def getMonth(self):
+        return self.fullDate.strftime('%B')
+    def setMonthYear(self, month, year):
+        self.fullDate = datetime.strptime('{0}-{1}-1', '%Y-%M-%d')
+    def getYear(self):
+        return self.fullDate.year
+    def addEvent(self, evt):
+        self.manager.addEvent(evt)
+    def getCalendarDays(self):
+        return self.calendarDays
+    def getPreviousDay(self, date):
+        day = datetime.strptime(date, '%Y-%B-%d') - timedelta(days=1)
+        return day.strftime('%Y-%B-%d')
+    def getNextDay(self, date):
+        day = datetime.strptime(date, '%Y-%B-%d') + timedelta(days=1)
+        return day.strftime('%Y-%B-%d')
+    def buildDayFor(self, fulldate, user):
         userEvents = []
         
         for event in self.manager.getEvents():
-            dayDate = datetime.strptime('{0} 00:00:00'.format(self.fullDateString), '%Y-%B-%d %H:%M:%S')
+            dayDate = datetime.strptime('{0} 00:00:00'.format(fulldate), '%Y-%B-%d %H:%M:%S')
             eventStartDate = datetime.strptime('{0}'.format(event.getDay()), '%Y-%m-%d %H:%M:%S')
             eventStopDate = datetime.strptime('{0}'.format(event.getStopDay()), '%Y-%m-%d %H:%M:%S')
             
@@ -117,34 +140,7 @@ class ArmyCalendarDay:
             for x in range(len(evt.getHTMLString())):
                 masterDay[x] = '{0}{1}'.format(masterDay[x], evt.getHTMLString()[x])
         return masterDay
-
-class ArmyCalendar:
-    def __init__(self, database):
-        self.fullDate = datetime.today()
-        self.manager = CalendarEventManager()
-        self.calendarDays = []
-        self.database = database
-    def getMonth(self):
-        return self.fullDate.strftime('%B')
-    def setMonthYear(self, month, year):
-        self.fullDate = datetime.strptime('{0}-{1}-1', '%Y-%M-%d')
-    def getYear(self):
-        return self.fullDate.year
-    def addEvent(self, evt):
-        self.manager.addEvent(evt)
-    def getCalendarDays(self):
-        return self.calendarDays
-    def getPreviousDay(self, date):
-        day = datetime.strptime(date, '%Y-%B-%d') - timedelta(days=1)
-        return day.strftime('%Y-%B-%d')
-    def getNextDay(self, date):
-        day = datetime.strptime(date, '%Y-%B-%d') + timedelta(days=1)
-        return day.strftime('%Y-%B-%d')
-    def buildDayFor(self, fulldate, user):
-        for days in self.calendarDays:
-            if fulldate == days.getfullDateString():
-                return days.buildUserEvents(user)
-    def createCalendar(self):
+    def createCalendar(self, month):
         # Reset the calendar
         self.calendarDays = []
     

@@ -131,7 +131,11 @@
 			<section>
 				<div class="container-fluid">
 					<header>
-						<h4 class="display-4 mb-4 text-center">{{ '{0} {1}'.format(calendar.getMonth(), calendar.getYear()) }}<h4>
+						<div class="row">
+							<div class="col-2"><a class="btn"><i class="fas fa-angle-double-left"></i></a></div>
+							<div class="col-8"><h4 class="display-4 mb-4 text-center">{{ '{0} {1}'.format(calendar.getMonth(), calendar.getYear()) }}<h4></div>
+							<div class="col-2"><a class="btn"><i class="fas fa-angle-double-right"></i></a></div>
+						</div>
 						<div class="row d-none d-sm-flex p-1 bg-dark text-white">
 							<h5 class="col-sm p-1 text-center">Sunday</h5>
 							<h5 class="col-sm p-1 text-center">Monday</h5>
@@ -163,6 +167,7 @@
 			</section>
 		</div>
 		
+		<!-- Modal that will be reused for each day passed to it-->
 		{% if event_day %}
 		<div class="modal fade" id="eventCalDay" aria-labelledby="eventCalDayLabel" aria-hidden="true">
 			<div class="modal-dialog modal-fullscreen modal-dialog-centered">

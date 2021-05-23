@@ -83,7 +83,7 @@ def calendar():
     if 'username' not in session:
         return redirect('/')
     
-    cal.createCalendar()
+    cal.createCalendar(datetime.today().month)
     
     return render_template('calendar.html', loggedInUser=session['username'], role=session['role'], calendar=cal, soldiers=db.query('SELECT * FROM login'), event_day=request.args.get('event_day'), success=request.args.get('success'), error=request.args.get('error'))
 
@@ -186,6 +186,7 @@ if __name__ == '__main__':
     db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'Leave', 'Super long test', '#42b9f5', datetime.strptime('2021-May-18', '%Y-%B-%d'), '07:30', datetime.strptime('2021-May-18', '%Y-%B-%d'), '08:30'))
     db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'Leave', 'Super long test', '#42b9f5', datetime.strptime('2021-May-19', '%Y-%B-%d'), '07:30', datetime.strptime('2021-May-20', '%Y-%B-%d'), '08:30'))
     db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'CQ', 'Super long test', '#1e967a', datetime.strptime('2021-May-19', '%Y-%B-%d'), '15:30', datetime.strptime('2021-May-20', '%Y-%B-%d'), '10:30'))
+    db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'CQ', 'Super long test', '#1e967a', datetime.strptime('2021-June-06', '%Y-%B-%d'), '06:30', datetime.strptime('2021-June-06', '%Y-%B-%d'), '10:30'))
     db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'Appointment', 'Super long test', '#e30035', datetime.strptime('2021-May-19', '%Y-%B-%d'), '10:30', datetime.strptime('2021-May-19', '%Y-%B-%d'), '13:00'))
     
     # Begin running the app
