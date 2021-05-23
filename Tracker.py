@@ -183,12 +183,10 @@ if __name__ == '__main__':
     app.register_error_handler(404, page_not_found)
     
     # Add testing event
+    db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'Leave', 'Super long test', '#42b9f5', datetime.strptime('2021-May-18', '%Y-%B-%d'), '07:30', datetime.strptime('2021-May-18', '%Y-%B-%d'), '08:30'))
     db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'Leave', 'Super long test', '#42b9f5', datetime.strptime('2021-May-19', '%Y-%B-%d'), '07:30', datetime.strptime('2021-May-20', '%Y-%B-%d'), '08:30'))
     db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'CQ', 'Super long test', '#1e967a', datetime.strptime('2021-May-19', '%Y-%B-%d'), '15:30', datetime.strptime('2021-May-20', '%Y-%B-%d'), '10:30'))
     db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'Appointment', 'Super long test', '#e30035', datetime.strptime('2021-May-19', '%Y-%B-%d'), '10:30', datetime.strptime('2021-May-19', '%Y-%B-%d'), '13:00'))
-    db.addEvent(cal, CalendarEvent('SGT Hartman', 1, 'Test', 'Super long test', '#787878', datetime.strptime('2021-May-20', '%Y-%B-%d'), '14:00', datetime.strptime('2021-May-20', '%Y-%B-%d'), '15:00'))
-    
-    db.addEvent(cal, CalendarEvent('SGT Hartman', 1, 'Test', 'Testing', '#787878', datetime.strptime('2021-May-6', '%Y-%B-%d'), '16:00', datetime.strptime('2021-May-13', '%Y-%B-%d'), '17:00'))
     
     # Begin running the app
     app.run(host="0.0.0.0")

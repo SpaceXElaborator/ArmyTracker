@@ -75,8 +75,8 @@ class ArmyCalendarDay:
             eventStopDate = datetime.strptime('{0}'.format(event.getStopDay()), '%Y-%m-%d %H:%M:%S')
             
             # Check if dates are within range
-            if eventStopDate >= dayDate or dayDate >= eventStartDate:
-                if event.getUser() == user:
+            if event.getUser() == user:
+                if eventStopDate >= dayDate and dayDate >= eventStartDate:
                     hour = 6
                     minute = 30
                     added = False
