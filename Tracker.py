@@ -188,6 +188,7 @@ if __name__ == '__main__':
     db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'CQ', 'Super long test', '#1e967a', datetime.strptime('2021-May-19', '%Y-%B-%d'), '15:30', datetime.strptime('2021-May-20', '%Y-%B-%d'), '10:30'))
     db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'CQ', 'Super long test', '#1e967a', datetime.strptime('2021-June-06', '%Y-%B-%d'), '06:30', datetime.strptime('2021-June-06', '%Y-%B-%d'), '10:30'))
     db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'Appointment', 'Super long test', '#e30035', datetime.strptime('2021-May-19', '%Y-%B-%d'), '10:30', datetime.strptime('2021-May-19', '%Y-%B-%d'), '13:00'))
+    db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'Leave', 'Super long test', '#42b9f5', datetime.strptime('2021-May-20', '%Y-%B-%d'), '07:30', datetime.strptime('2021-May-21', '%Y-%B-%d'), '08:30'))
     
     # Begin running the app
     app.run(host="0.0.0.0")

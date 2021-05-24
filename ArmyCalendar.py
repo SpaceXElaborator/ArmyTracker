@@ -64,8 +64,6 @@ class ArmyCalendarDay:
         return self.day
     def getName(self):
         return self.dayName
-    def addEvent(self, x):
-        self.events.append(x)
 
 class ArmyCalendar:
     def __init__(self, database):
@@ -107,7 +105,7 @@ class ArmyCalendar:
                     for x in range(21):
                         # Get each date that the program will need to figure out checks
                         dayTime = dayDate.replace(hour=hour, minute=minute)
-                        
+                            
                         # Be inclusive for both start and end date
                         if eventStopDate >= dayTime or dayTime >= eventStartDate:
                             # Format the startDate and endDate to get their time for comparring
@@ -118,13 +116,13 @@ class ArmyCalendar:
                             if eventStopTime > dayTime and dayTime >= eventStartTime:
                                 htmlString.addHTMLString('<span class="cal_dot" data-bs-toggle="tooltip" data-bs-placement="top" title="' + event.getTitle() + '" style="background-color: ' + event.getType() + ';"></span>')
                                 added = True
-                        
+                            
                         if minute == 30:
                             hour += 1
                             minute = 0
                         else:
                             minute = 30
-                        
+                            
                         if added:
                             added = False
                             continue
