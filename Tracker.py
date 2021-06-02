@@ -44,7 +44,9 @@ def login():
         
         # If the user successfully logs in, set their session and redirect them to the tracker
         if db.loginUser(user, passW):
-            session['username'] = db.query('SELECT * FROM login WHERE username = ?', [user], one = True)[4]
+            loggedInUser = db.query('SELECT * FROM login WHERE username = ?', [user], one = True)
+            session['name'] = loggedInUser[4]
+            session['username'] = loggedInUser[1]
             session['role'] = db.checkRole(user)
             return redirect('/tracker')
         
@@ -60,7 +62,7 @@ def tracker():
     # If they don't have a proper session, redirect them back to the homepage
     if 'username' not in session:
         return redirect('/')
-    return render_template('tracker.html', loggedInUser=session['username'], role=session['role'], success=request.args.get('success'), error=request.args.get('error'))
+    return render_template('tracker.html', loggedInUser=session['name'], role=session['role'], success=request.args.get('success'), error=request.args.get('error'))
 
 @app.route('/soldier')
 def soldier():
@@ -74,7 +76,7 @@ def soldier():
         return redirect(url_for('tracker', error='No Access'))
     
     # If they login, set their name in the top left corner of the page
-    return render_template('soldiers.html', loggedInUser=session['username'], role=session['role'], users=db.query('SELECT * FROM users'), success=request.args.get('success'), error=request.args.get('error'))
+    return render_template('soldiers.html', loggedInUser=session['name'], role=session['role'], users=db.query('SELECT * FROM users'), success=request.args.get('success'), error=request.args.get('error'))
 
 @app.route('/calendar')
 def calendar():
@@ -85,7 +87,7 @@ def calendar():
     
     cal.createCalendar(datetime.today().month)
     
-    return render_template('calendar.html', loggedInUser=session['username'], role=session['role'], calendar=cal, soldiers=db.query('SELECT * FROM login'), event_day=request.args.get('event_day'), success=request.args.get('success'), error=request.args.get('error'))
+    return render_template('calendar.html', loggedInUser=session['name'], role=session['role'], calendar=cal, soldiers=db.query('SELECT * FROM login'), event_day=request.args.get('event_day'), success=request.args.get('success'), error=request.args.get('error'))
 
 @app.route('/AddUser', methods = ['POST'])
 def AddUser():
@@ -154,6 +156,7 @@ def HandleLogout():
     
     # Remove 'username' and 'role' from the session to invalidate
     session.pop('username')
+    session.pop('name')
     session.pop('role')
     return redirect('/')
 
@@ -170,8 +173,13 @@ def ChangePassword():
     
     err = None
     
+    print(session['username'])
+    print(curr)
+    print(NewPass)
+    
     # Make sure the new passwords match
     if NewPass == NewPassCheck:
+        print('Passwords Match')
         if db.loginUser(session['username'], curr):
             db.changePass(session['username'], NewPass)
         else:
