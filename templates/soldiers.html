@@ -53,6 +53,15 @@
 				
 				<ul class="navbar-nav ms-auto d-flex flex-row">
 					<li class="nav-item dropdown">
+						<a class="nav-link me-3 me-lg-0 dropdown-toggle hidden-arrow" href="#" id="adminMessages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<i class="far fa-comment-alt"></i>
+							<span class="badge rounded-pill badge-notification bg-danger">1</span>
+						</a>
+						<ul class="dropdown-menu border dropdown-menu-end" aria-labelledby="adminMessages">
+							<li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#ChangePassModal">Test Message Number 1</button></li>
+						</ul>
+					</li>
+					<li class="nav-item dropdown">
 						<a class="nav-link me-3 me-lg-0 dropdown-toggle hidden-arrow" href="#" id="userProfile" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 							<i class="fas fa-user"></i>
 						</a>
@@ -96,19 +105,68 @@
 		{% endif %}
 	
 		<div class="container pt-4">
-			
 			<section>
 				<div class="row">
 				{% for x in users %}
-					<div class="col-xl-3 col-sm-6 col-12 mb-4">
+				
+					<div class="col-xl-3 col-sm-6 col-12 mb-4 rounded-3">
 						<div class="card">
-							<div class="card-header py-3">
-								<strong>{{ '{0} {1}'.format(x[3],x[2]) }}</strong>
-							</div>
-							<div class="card-body">
-								{{ '{0} {1}'.format(x[1], x[2]) }}
-								<br />
-								{{ 'Squad: {0}'.format(x[5]) }}
+							<div class="row g-0">
+								<div class="col-md-4 align-self-center">
+									{% if x[3] == 'PVT' %}
+										<img src="..." alt="No rank">
+									{% elif x[3] == 'PV2' %}
+										<img src="{{ url_for('static', filename='textures/ranks/enlisted/E2.png') }}" width="50" height="50">
+									{% elif x[3] == 'PFC' %}
+										<img src="{{ url_for('static', filename='textures/ranks/enlisted/E3.png') }}" width="50" height="50">
+									{% elif x[3] == 'SPC' %}
+										<img src="{{ url_for('static', filename='textures/ranks/enlisted/E4-SPC.png') }}" width="50" height="50">
+									{% elif x[3] == 'COL' %}
+										<img src="{{ url_for('static', filename='textures/ranks/enlisted/E4.png') }}" width="50" height="50">
+									{% elif x[3] == 'SGT' %}
+										<img src="{{ url_for('static', filename='textures/ranks/enlisted/E5.png') }}" width="50" height="50">
+									{% elif x[3] == 'SSG' %}
+										<img src="{{ url_for('static', filename='textures/ranks/enlisted/E6.png') }}" width="50" height="50">
+									{% elif x[3] == 'SFC' %}
+										<img src="{{ url_for('static', filename='textures/ranks/enlisted/E7.png') }}" width="50" height="50">
+									{% elif x[3] == 'MSG' %}
+										<img src="{{ url_for('static', filename='textures/ranks/enlisted/E8-Master.png') }}" width="50" height="50">
+									{% elif x[3] == '1SG' %}
+										<img src="{{ url_for('static', filename='textures/ranks/enlisted/E8-First.png') }}" width="50" height="50">
+									{% elif x[3] == 'SGM' %}
+										<img src="{{ url_for('static', filename='textures/ranks/enlisted/E9-SGM.png') }}" width="50" height="50">
+									{% elif x[3] == 'CSM' %}
+										<img src="{{ url_for('static', filename='textures/ranks/enlisted/E9-CSM.png') }}" width="50" height="50">
+									{% elif x[3] == 'SMA' %}
+										<img src="{{ url_for('static', filename='textures/ranks/enlisted/E9-SMA.png') }}" width="50" height="50">
+									{% elif x[3] == 'WO1' %}
+										<img src="{{ url_for('static', filename='textures/ranks/Warrants/W1.png') }}" width="50" height="50">
+									{% elif x[3] == 'CW2' %}
+										<img src="{{ url_for('static', filename='textures/ranks/Warrants/W2.png') }}" width="50" height="50">
+									{% elif x[3] == 'CW3' %}
+										<img src="{{ url_for('static', filename='textures/ranks/Warrants/W3.png') }}" width="50" height="50">
+									{% elif x[3] == 'CW4' %}
+										<img src="{{ url_for('static', filename='textures/ranks/Warrants/W4.png') }}" width="50" height="50">
+									{% elif x[3] == 'CW5' %}
+										<img src="{{ url_for('static', filename='textures/ranks/Warrants/W5.png') }}" width="50" height="50">
+									{% elif x[3] == '2LT' %}
+									{% elif x[3] == '1LT' %}
+									{% elif x[3] == 'CPT' %}
+									{% elif x[3] == 'MAJ' %}
+									{% elif x[3] == 'LTC' %}
+									{% elif x[3] == 'COL' %}
+									{% elif x[3] == 'BG' %}
+									{% elif x[3] == 'MG' %}
+									{% elif x[3] == 'LTG' %}
+									{% elif x[3] == 'GEN' %}
+									{% endif %}
+								</div>
+								<div class="col-md-8">
+									<div class="card-body">
+										<h5 class="card-title">{{ '{0} {1}'.format(x[3],x[2]) }}</h5>
+										<p class="card-text">{{ 'Squad: {0}'.format(x[5]) }}</p>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>

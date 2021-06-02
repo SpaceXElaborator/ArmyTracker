@@ -55,6 +55,15 @@
 					
 				<ul class="navbar-nav ms-auto d-flex flex-row">
 					<li class="nav-item dropdown">
+						<a class="nav-link me-3 me-lg-0 dropdown-toggle hidden-arrow" href="#" id="adminMessages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<i class="far fa-comment-alt"></i>
+							<span class="badge rounded-pill badge-notification bg-danger">1</span>
+						</a>
+						<ul class="dropdown-menu border dropdown-menu-end" aria-labelledby="adminMessages">
+							<li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#ChangePassModal">Test Message Number 1</button></li>
+						</ul>
+					</li>
+					<li class="nav-item dropdown">
 						<a class="nav-link me-3 me-lg-0 dropdown-toggle hidden-arrow" href="#" id="userProfile" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 							<i class="fas fa-user"></i>
 						</a>
@@ -98,33 +107,74 @@
 		{% endif %}
 	
 		<div class="modal fade" id="ChangePassModal" tabindex="-1" aria-labelledby="ChangePassModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="ChangePassModalLabel">Change Password</h5>
-							<button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<form action="ChangePassword" method="POST">
-								<div class="mb-3">
-									<label for="Current">Current Password</label>
-									<input type="password" name="Current" id="Current" class="form-control" required>
-								</div>
-								<div class="mb-3">
-									<label for="NewPass">New Password</label>
-									<input type="password" name="NewPass" id="NewPass" class="form-control" required>
-								</div>
-								<div class="mb-3">
-									<label for="NewPassCheck">Retype Password</label>
-									<input type="password" name="NewPassCheck" id="NewPassCheck" class="form-control" required>
-								</div>
-								<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-								<button type="submit" class="btn btn-primary">Change Password</button>
-							</form>
-						</div>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="ChangePassModalLabel">Change Password</h5>
+						<button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form action="ChangePassword" method="POST">
+							<div class="mb-3">
+								<label for="Current">Current Password</label>
+								<input type="password" name="Current" id="Current" class="form-control" required>
+							</div>
+							<div class="mb-3">
+								<label for="NewPass">New Password</label>
+								<input type="password" name="NewPass" id="NewPass" class="form-control" required>
+							</div>
+							<div class="mb-3">
+								<label for="NewPassCheck">Retype Password</label>
+								<input type="password" name="NewPassCheck" id="NewPassCheck" class="form-control" required>
+							</div>
+							<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+							<button type="submit" class="btn btn-primary">Change Password</button>
+						</form>
 					</div>
 				</div>
 			</div>
+		</div>
+		
+		<div class="container pt-4">
+			<section class="mb-4">
+				<div class="card">
+					<div class="card-header py-3">
+						<h5 class="mb-0 text-center"><strong>Platoon Sergeants And Leaders</strong></h5>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							
+						</div>
+					</div>
+				</div>
+			</section>
+			
+			<section class="mb-4">
+				<div class="card">
+					<div class="card-header py-3">
+						<h5 class="mb-0 text-center"><strong>Squad Leaders And Team Leaders</strong></h5>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							
+						</div>
+					</div>
+				</div>
+			</section>
+			
+			<section class="mb-4">
+				<div class="card">
+					<div class="card-header py-3">
+						<h5 class="mb-0 text-center"><strong>Soldiers</strong></h5>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
 	</main>
 	
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
