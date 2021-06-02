@@ -94,6 +94,10 @@ def AddUser():
     if 'username' not in session:
         return redirect('/')
     
+     # If they don't have permission to be here, redirect them back to their previous page
+    if session['role'] != 'Admin':
+        return redirect(url_for('tracker', error='No Access'))
+    
     # Get the required fields to add a user from the <form> tag in html document
     first = request.form['First']
     last = request.form['Last']
@@ -118,6 +122,10 @@ def RemUser():
     #If they don't have a proper session, redirect them back to the homepage
     if 'username' not in session:
         return redirect('/')
+    
+     # If they don't have permission to be here, redirect them back to their previous page
+    if session['role'] != 'Admin':
+        return redirect(url_for('tracker', error='No Access'))
     
     # Get the first and last name from the <option> tag from the html form
     name = request.form['UserName'].split(' ')
@@ -189,6 +197,9 @@ if __name__ == '__main__':
     db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'CQ', 'Super long test', '#1e967a', datetime.strptime('2021-June-06', '%Y-%B-%d'), '06:30', datetime.strptime('2021-June-06', '%Y-%B-%d'), '10:30'))
     db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'Appointment', 'Super long test', '#e30035', datetime.strptime('2021-May-19', '%Y-%B-%d'), '10:30', datetime.strptime('2021-May-19', '%Y-%B-%d'), '13:00'))
     db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'Leave', 'Super long test', '#42b9f5', datetime.strptime('2021-May-20', '%Y-%B-%d'), '07:30', datetime.strptime('2021-May-21', '%Y-%B-%d'), '08:30'))
+    db.addEvent(cal, CalendarEvent('PV2 Davis', 1, 'Work', 'Super', '#702e16', datetime.strptime('2021-May-22', '%Y-%B-%d'), '06:30', datetime.strptime('2021-May-22', '%Y-%B-%d'), '17:00'))
+    db.addEvent(cal, CalendarEvent('PV2 Davis', 1, 'Work', 'Super', '#702e16', datetime.strptime('2021-May-23', '%Y-%B-%d'), '06:30', datetime.strptime('2021-May-23', '%Y-%B-%d'), '16:30'))
+    db.addEvent(cal, CalendarEvent('PV2 Davis', 1, 'Work', 'Super', '#702e16', datetime.strptime('2021-May-25', '%Y-%B-%d'), '06:30', datetime.strptime('2021-May-25', '%Y-%B-%d'), '15:30'))
     
     # Begin running the app
     app.run(host="0.0.0.0")
