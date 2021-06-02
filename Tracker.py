@@ -173,13 +173,8 @@ def ChangePassword():
     
     err = None
     
-    print(session['username'])
-    print(curr)
-    print(NewPass)
-    
     # Make sure the new passwords match
     if NewPass == NewPassCheck:
-        print('Passwords Match')
         if db.loginUser(session['username'], curr):
             db.changePass(session['username'], NewPass)
         else:
