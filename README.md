@@ -1,7 +1,7 @@
 # ArmyTracker
 An all-in-one Tracker for military companies. Easy setup and installation to get started and simple buttons and viewing for anyone to be able to use. Starting from version 7.0 onward, admins/Platoon Sergeants will be able to start editing what is tracked and presented when viewing soliders. Comes with a calendar to see what soldiers are doing for any specific day. Soldiers can request Appointments and Team Leads have the ability to accept or deny with messages to be sent back to the soldier. Tracked information will be added to the calendar without any extra steps besides accepting.
 ## Testing
-  To test the features of the calendar as they are right now, you will have to add soldier "Sean Rahman" as a SPC. The calendar dates will then show for that soldier on the days: May 18, 19, 20 and June 6. If you'd like to see you're own calendar events, check the very bottom of "Tracker.py" To see the syntax for adding your own even with a given date and time.
+  To test the features of the calendar as they are right now, you will have to add soldier "Sean Rahman" as a SPC. The calendar dates will then show for that soldier on the days: May 18, 19, 20 and June 6. If you'd like to see you're own calendar events, check the very bottom of "Tracker.py" To see the syntax for adding your own event with a given date and time.
 ## Setup
 1. Download Docker from the [Docker Website](https://www.docker.com/products/docker-desktop)
 2. Download the latest release from the releases section
