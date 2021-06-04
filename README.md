@@ -17,7 +17,7 @@ password: 'password1'
 ## Running
 To run the application, run the command
 ```docker run -i -t -p 5000:5000 army-tracker```. There is a current issue where the IP address may change where you need to connect to from the terminal,
-always connect to the website via ```http://172.0.0.1:5000```
+always connect to the website via ```http://127.0.0.1:5000```
 ## Coming Soon
 1. Custom tracker options
 2. Calender events [+]
