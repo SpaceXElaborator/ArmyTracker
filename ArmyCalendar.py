@@ -20,8 +20,7 @@ class UserCalendarDayEvent:
         return self.Str
 
 class CalendarEvent:
-    def __init__(self, user, evt_number, title, description, cal_type, day, time, stop_day, stop_time):
-        self.evt_number = evt_number
+    def __init__(self, user, title, description, cal_type, day, time, stop_day, stop_time):
         self.title = title
         self.description = description
         self.cal_type = cal_type
@@ -30,10 +29,10 @@ class CalendarEvent:
         self.user = user
         self.stop_day = stop_day
         self.stop_time = stop_time
+    def __repr__(self):
+        return '{0} {1} {2}'.format(self.user, self.day, self.stop_day)
     def getUser(self):
         return self.user
-    def getEventNumber(self):
-        return self.evt_number
     def getTitle(self):
         return self.title
     def getDesc(self):
@@ -81,6 +80,8 @@ class ArmyCalendar:
         self.manager.addEvent(evt)
     def getCalendarDays(self):
         return self.calendarDays
+    def getPreviousMonth(self, date):
+        day = datetime.strptime(date, '%Y-%B-%d') - timedelta(months=1)
     def getPreviousDay(self, date):
         day = datetime.strptime(date, '%Y-%B-%d') - timedelta(days=1)
         return day.strftime('%Y-%B-%d')

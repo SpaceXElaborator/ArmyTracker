@@ -108,40 +108,47 @@
 		{% endif %}
 	
 		<div class="modal fade" id="ChangePassModal" tabindex="-1" aria-labelledby="ChangePassModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="ChangePassModalLabel">Change Password</h5>
-							<button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<form action="/ChangePassword" method="POST">
-								<div class="mb-3">
-									<label for="Current">Current Password</label>
-									<input type="password" name="Current" id="Current" class="form-control" required>
-								</div>
-								<div class="mb-3">
-									<label for="NewPass">New Password</label>
-									<input type="password" name="NewPass" id="NewPass" class="form-control" required>
-								</div>
-								<div class="mb-3">
-									<label for="NewPassCheck">Retype Password</label>
-									<input type="password" name="NewPassCheck" id="NewPassCheck" class="form-control" required>
-								</div>
-								<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-								<button type="submit" class="btn btn-primary">Change Password</button>
-							</form>
-						</div>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="ChangePassModalLabel">Change Password</h5>
+						<button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form action="/ChangePassword" method="POST">
+							<div class="mb-3">
+								<label for="Current">Current Password</label>
+								<input type="password" name="Current" id="Current" class="form-control" required>
+							</div>
+							<div class="mb-3">
+								<label for="NewPass">New Password</label>
+								<input type="password" name="NewPass" id="NewPass" class="form-control" required>
+							</div>
+							<div class="mb-3">
+								<label for="NewPassCheck">Retype Password</label>
+								<input type="password" name="NewPassCheck" id="NewPassCheck" class="form-control" required>
+							</div>
+							<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+							<button type="submit" class="btn btn-primary">Change Password</button>
+						</form>
 					</div>
 				</div>
 			</div>
+		</div>
 	
 		<div class="container pt-4">
 			<section>
 				<div class="container-fluid">
 					<header>
 						<div class="row">
-							<div class="col-2"><a class="btn"><i class="fas fa-angle-double-left"></i></a></div>
+							<div class="col-2 gy-2">
+								<div class="col-12">
+									<a class="btn"><i class="fas fa-angle-double-left"></i></a>
+								</div>
+								<div class="col-12">
+									<a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addEventModal">+ Add Event</a>
+								</div>
+							</div>
 							<div class="col-8"><h4 class="display-4 mb-4 text-center">{{ '{0} {1}'.format(calendar.getMonth(), calendar.getYear()) }}<h4></div>
 							<div class="col-2"><a class="btn"><i class="fas fa-angle-double-right"></i></a></div>
 						</div>
@@ -174,6 +181,49 @@
 					</div>
 				</div>
 			</section>
+		</div>
+		
+		<div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="addEventModalLabel">Add Event</h5>
+						<button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form action="/AddEvent" method="POST">
+							<div class="mb-3">
+								<label for="Event_Type">Event Type</label>
+								<select class="form-select" aria-label="Event_Type" name="Event_Type" id="Event_Type" required>
+									<option selected>Select Event Type</option>
+									<option value="Appointment">Appointment</option>
+									<option value="Leave">Leave</option>
+									<option value="CQ">CQ</option>
+									<option value="Pass">Pass</option>
+								</select>
+							</div>
+							<div class="mb-3">
+								<label for="SDate">Start Date</label>
+								<input type="date" name="SDate" id="SDate" class="form-control" required>
+							</div>
+							<div class="mb-3">
+								<label for="STime">Start Time</label>
+								<input type="time" name="STime" id="STime" min="06:30" max="17:00" step="1800" class="form-control" required>
+							</div>
+							<div class="mb-3">
+								<label for="EDate">End Date</label>
+								<input type="date" name="EDate" id="EDate" class="form-control" required>
+							</div>
+							<div class="mb-3">
+								<label for="ETime">Approx. End Time</label>
+								<input type="time" name="ETime" id="ETime" min="06:30" max="17:00" step="1800" class="form-control" required>
+							</div>
+							<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+							<button type="submit" class="btn btn-primary">Request Event</button>
+						</form>
+					</div>
+				</div>
+			</div>
 		</div>
 		
 		<!-- Modal that will be reused for each day passed to it-->
@@ -260,10 +310,10 @@
 				return new bootstrap.Tooltip(tooltipTriggerEl);
 			});
 			
+			toastList.forEach(toast => toast.show());
+			
 			var modal = new bootstrap.Modal(document.getElementById('eventCalDay'));
 			modal.show();
-			
-			toastList.forEach(toast => toast.show());
 		});
 	</script>
 </body>

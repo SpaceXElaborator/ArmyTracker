@@ -27,6 +27,9 @@ app.secret_key = app.config['SECRET_KEY']
 db = Database(app)
 cal = ArmyCalendar(db)
 
+#Color map for information dealing with events types
+color_map = {'Appointment': '#26d1b7', 'Leave': '#d18126', 'CQ': '#bf2817', 'Pass': '#c4b1af'}
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -88,6 +91,31 @@ def calendar():
     cal.createCalendar(datetime.today().month)
     
     return render_template('calendar.html', loggedInUser=session['name'], role=session['role'], calendar=cal, soldiers=db.query('SELECT * FROM login'), event_day=request.args.get('event_day'), success=request.args.get('success'), error=request.args.get('error'))
+
+@app.route('/AddEvent', methods = ['POST'])
+def AddEvent():
+    if 'username' not in session:
+        return redirect('/')
+
+    if session['role'] == 'Admin':
+        return redirect(url_for('calendar', error='Administrator Can\'t Have Events'))
+    
+    startD = datetime.strptime('{0}'.format(request.form['SDate']), '%Y-%m-%d')
+    endD = datetime.strptime('{0}'.format(request.form['EDate']), '%Y-%m-%d')
+    
+    if endD < startD:
+        return redirect(url_for('calendar', error='End Date Can\'t Be Before Start Date'))
+    
+    if request.form['Event_Type'] not in color_map:
+        return redirect(url_for('calendar', error='Must Pick A Valid Event Type'))
+    
+    if startD < datetime.today():
+        return redirect(url_for('calendar', error='Calendar Event Must Be Today Or Later'))
+    
+    evt = CalendarEvent(session['name'], request.form['Event_Type'], 'Test', color_map[request.form['Event_Type']], startD, request.form['STime'], endD, request.form['ETime'])
+    db.addEvent(cal, evt)
+    
+    return redirect(url_for('calendar', success='Calendar Event Requested'))
 
 @app.route('/AddUser', methods = ['POST'])
 def AddUser():
@@ -194,15 +222,18 @@ if __name__ == '__main__':
     app.register_error_handler(404, page_not_found)
     
     # Add testing event
-    db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'Leave', 'Super long test', '#42b9f5', datetime.strptime('2021-May-18', '%Y-%B-%d'), '07:30', datetime.strptime('2021-May-18', '%Y-%B-%d'), '08:30'))
-    db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'Leave', 'Super long test', '#42b9f5', datetime.strptime('2021-May-19', '%Y-%B-%d'), '07:30', datetime.strptime('2021-May-20', '%Y-%B-%d'), '08:30'))
-    db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'CQ', 'Super long test', '#1e967a', datetime.strptime('2021-May-19', '%Y-%B-%d'), '15:30', datetime.strptime('2021-May-20', '%Y-%B-%d'), '10:30'))
-    db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'CQ', 'Super long test', '#1e967a', datetime.strptime('2021-June-06', '%Y-%B-%d'), '06:30', datetime.strptime('2021-June-06', '%Y-%B-%d'), '10:30'))
-    db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'Appointment', 'Super long test', '#e30035', datetime.strptime('2021-May-19', '%Y-%B-%d'), '10:30', datetime.strptime('2021-May-19', '%Y-%B-%d'), '13:00'))
-    db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'Leave', 'Super long test', '#42b9f5', datetime.strptime('2021-May-20', '%Y-%B-%d'), '07:30', datetime.strptime('2021-May-21', '%Y-%B-%d'), '08:30'))
-    db.addEvent(cal, CalendarEvent('PV2 Davis', 1, 'Work', 'Super', '#702e16', datetime.strptime('2021-May-22', '%Y-%B-%d'), '06:30', datetime.strptime('2021-May-22', '%Y-%B-%d'), '17:00'))
-    db.addEvent(cal, CalendarEvent('PV2 Davis', 1, 'Work', 'Super', '#702e16', datetime.strptime('2021-May-23', '%Y-%B-%d'), '06:30', datetime.strptime('2021-May-23', '%Y-%B-%d'), '16:30'))
-    db.addEvent(cal, CalendarEvent('PV2 Davis', 1, 'Work', 'Super', '#702e16', datetime.strptime('2021-May-25', '%Y-%B-%d'), '06:30', datetime.strptime('2021-May-25', '%Y-%B-%d'), '15:30'))
+    #db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'Leave', 'Super long test', '#42b9f5', datetime.strptime('2021-06-09', '%Y-%m-%d'), '07:30', datetime.strptime('2021-06-09', '%Y-%m-%d'), '08:30'))
+    #db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'Leave', 'Super long test', '#42b9f5', datetime.strptime('2021-June-09', '%Y-%B-%d'), '07:30', datetime.strptime('2021-June-09', '%Y-%B-%d'), '08:30'))
+    #db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'CQ', 'Super long test', '#1e967a', datetime.strptime('2021-May-19', '%Y-%B-%d'), '15:30', datetime.strptime('2021-May-20', '%Y-%B-%d'), '10:30'))
+    #db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'CQ', 'Super long test', '#1e967a', datetime.strptime('2021-June-06', '%Y-%B-%d'), '06:30', datetime.strptime('2021-June-06', '%Y-%B-%d'), '10:30'))
+    #db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'Appointment', 'Super long test', '#e30035', datetime.strptime('2021-May-19', '%Y-%B-%d'), '10:30', datetime.strptime('2021-May-19', '%Y-%B-%d'), '13:00'))
+    #db.addEvent(cal, CalendarEvent('SPC Rahman', 1, 'Leave', 'Super long test', '#42b9f5', datetime.strptime('2021-May-20', '%Y-%B-%d'), '07:30', datetime.strptime('2021-May-21', '%Y-%B-%d'), '08:30'))
+    #db.addEvent(cal, CalendarEvent('PV2 Davis', 1, 'Work', 'Super', '#702e16', datetime.strptime('2021-May-22', '%Y-%B-%d'), '06:30', datetime.strptime('2021-May-22', '%Y-%B-%d'), '17:00'))
+    #db.addEvent(cal, CalendarEvent('PV2 Davis', 1, 'Work', 'Super', '#702e16', datetime.strptime('2021-May-23', '%Y-%B-%d'), '06:30', datetime.strptime('2021-May-23', '%Y-%B-%d'), '16:30'))
+    #db.addEvent(cal, CalendarEvent('PV2 Davis', 1, 'Work', 'Super', '#702e16', datetime.strptime('2021-May-25', '%Y-%B-%d'), '06:30', datetime.strptime('2021-May-25', '%Y-%B-%d'), '15:30'))
+    
+    # Load Up Events
+    db.loadEvents(cal)
     
     # Begin running the app
     app.run(host="0.0.0.0")

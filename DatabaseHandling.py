@@ -2,6 +2,8 @@ import sqlite3
 import os
 from passlib.hash import pbkdf2_sha256
 
+from ArmyCalendar import CalendarEvent
+
 class Database:
     def __init__(self, app):
         self.webapp = app
@@ -117,11 +119,19 @@ class Database:
             db.close()
             return True
         return False
-        
+    
+    # Add an event to both the calendar and the database to be retrieved from later during start up
     def addEvent(self, cal, event):
-        #db = self.connect()
-        #db.execute('INSERT INTO events VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [None, event.getTitle(), event.getType(), event.getDay(), event.getTime(), event.getStopDay(), event.getStopTime(), event.getUser()])
-        #db.commit()
-        #db.close()
-        
+        db = self.connect()
+        db.execute('INSERT INTO events VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [None, event.getTitle(), event.getType(), event.getDay(), event.getTime(), event.getStopDay(), event.getStopTime(), event.getUser()])
+        db.commit()
+        db.close()
         cal.addEvent(event)
+        
+    # Load events into the calendar (Only called on start)
+    def loadEvents(self, cal):
+        evtsToLoad = self.query('SELECT * FROM events', [], one = False)
+        for x in evtsToLoad:
+            evt = CalendarEvent(x[7], x[1], 'Test', x[2], x[3], x[4], x[5], x[6])
+            cal.addEvent(evt)
+            print('Loaded an Event')
